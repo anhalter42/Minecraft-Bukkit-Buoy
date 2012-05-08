@@ -100,14 +100,14 @@ public class WaterPathItem {
                     (red_position.z + green_position.z) / 2
                 );
         way_red_position = new BlockPosition(
-                    red_position.x + (((red_position.x - green_position.x) * 2) / 3),
-                    red_position.y + (((red_position.y - green_position.y) * 2) / 3),
-                    red_position.z + (((red_position.z - green_position.z) * 2) / 3)
+                    red_position.x + (((red_position.x - green_position.x) * 1) / 3),
+                    red_position.y + (((red_position.y - green_position.y) * 1) / 3),
+                    red_position.z + (((red_position.z - green_position.z) * 1) / 3)
                 );
         way_green_position = new BlockPosition(
-                    green_position.x + (((green_position.x - red_position.x) * 2) / 3),
-                    green_position.y + (((green_position.y - red_position.y) * 2) / 3),
-                    green_position.z + (((green_position.z - red_position.z) * 2) / 3)
+                    green_position.x + (((green_position.x - red_position.x) * 1) / 3),
+                    green_position.y + (((green_position.y - red_position.y) * 1) / 3),
+                    green_position.z + (((green_position.z - red_position.z) * 1) / 3)
                 );
     }
     
