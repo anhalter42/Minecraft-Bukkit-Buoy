@@ -52,6 +52,7 @@ public class BuoyFinder implements Runnable {
             }
             if (!lDB.contains(lLoc.getBlockX(), lLoc.getBlockY(), lLoc.getBlockZ())) {
                 WaterPathItem lItem = new WaterPathItem(lLoc, lLoc2);
+                lWorld.getBlockAt(lItem.mid_position.x, lItem.mid_position.y, lItem.mid_position.z).setTypeIdAndData(35, (byte) 2, true);
                 lDB.addItem(lItem);
                 lDB.save();
                 player.sendMessage("Buoy activated.");

@@ -4,7 +4,6 @@
  */
 package com.mahn42.anhalter42.buoy;
 
-import com.mahn42.anhalter42.buoy.BlockPosition;
 import org.bukkit.Location;
 
 /**
