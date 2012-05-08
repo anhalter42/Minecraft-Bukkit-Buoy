@@ -12,6 +12,7 @@ import org.bukkit.Location;
  * @author andre
  */
 public class WaterPathItem {
+    
     public BlockPosition red_position;
     public BlockPosition green_position;
     
