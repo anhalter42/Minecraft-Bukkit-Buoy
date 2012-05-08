@@ -20,6 +20,6 @@ public class BuoyMain extends JavaPlugin {
 
     @Override
     public void onEnable() { 
-        //this.getServer().getPluginManager().registerEvents(new VehicleListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
     }
 }
