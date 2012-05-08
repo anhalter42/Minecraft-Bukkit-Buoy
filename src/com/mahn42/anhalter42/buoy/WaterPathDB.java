@@ -28,7 +28,6 @@ public class WaterPathDB {
                 BufferedReader lReader = new BufferedReader(new FileReader(store));
                 String line;
                 while ((line = lReader.readLine()) != null) {
-                    //x;y;z;B=Buoy/W=Water
                     WaterPathItem lItem = new WaterPathItem(line);
                     addItem(lItem);
                 }
