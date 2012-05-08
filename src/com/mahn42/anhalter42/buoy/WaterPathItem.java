@@ -33,7 +33,12 @@ public class WaterPathItem {
     }
 
     public WaterPathItem(String aLine) {
-        this.fromString(aLine);
+        red_position = new BlockPosition();
+        green_position = new BlockPosition();
+        mid_position = new BlockPosition();
+        way_green_position = new BlockPosition();
+        way_red_position = new BlockPosition();
+        fromString(aLine);
     }
             
     public WaterPathItem(int aRedX, int aRedY, int aRedZ, int aGreenX, int aGreenY, int aGreenZ) {
