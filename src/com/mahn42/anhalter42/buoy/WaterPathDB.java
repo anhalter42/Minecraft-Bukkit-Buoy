@@ -6,6 +6,7 @@ package com.mahn42.anhalter42.buoy;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
  *
  * @author andre
  */
-public class WaterPathDB {
+public class WaterPathDB implements Iterable<WaterPathItem> {
     public File store;
     protected ArrayList fItems = new ArrayList();
     
@@ -60,7 +61,29 @@ public class WaterPathDB {
     }
     
     public void addItem(WaterPathItem aItem) {
-        fItems.add(aItem);
+        int lIndex = 0;
+        int lFoundIndex = -1;
+        double lDistance = Double.MAX_VALUE;
+        double lTempDistance;
+        double lLastTempDistance = Double.MAX_VALUE;
+        for (Object lObject : fItems) {
+            WaterPathItem lItem = (WaterPathItem) lObject;
+            lTempDistance = lItem.distanceSquared(aItem);
+            if (lTempDistance < lDistance) {
+                lDistance = lTempDistance;
+                lFoundIndex = lIndex;
+            } else {
+                if ((lFoundIndex >= 0) && (lTempDistance > lLastTempDistance)) {
+                    break;
+                }
+            }
+            lLastTempDistance = lTempDistance;
+            lIndex++;
+        }
+        if (lFoundIndex < 0) {
+            lFoundIndex = 0;
+        }
+        fItems.add(lFoundIndex, aItem);
     }
     
     public WaterPathItem getItem(int aIndex) {
@@ -79,5 +102,48 @@ public class WaterPathDB {
             
     public boolean contains(int aX, int aY, int aZ) {
         return getItemAt(aX, aY, aZ) != null;
+    }
+
+    /*
+    public ArrayList getItemsNearlyAt(WaterPathItem aItem) {
+        return getItemsNearlyAt(fItems.indexOf(aItem));
+    }
+    
+    public ArrayList getItemsNearlyAt(int aIndex) {
+        ArrayList lResults = new ArrayList();
+        
+        return lResults;
+    }
+    * 
+    */
+
+    protected class WaterPathItemIterator implements Iterator<WaterPathItem> {
+
+        protected WaterPathDB fDB;
+        protected int fIndex = 0;
+        
+        public WaterPathItemIterator(WaterPathDB aDB) {
+            fDB = aDB;
+        }
+        
+        @Override
+        public boolean hasNext() {
+            return fDB.fItems.size() > 0 && fIndex < fDB.fItems.size();
+        }
+
+        @Override
+        public WaterPathItem next() {
+            return fDB.getItem(fIndex++);
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    }
+    
+    @Override
+    public Iterator<WaterPathItem> iterator() {
+        return new WaterPathItemIterator(this);
     }
 }

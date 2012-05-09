@@ -6,6 +6,7 @@ package com.mahn42.anhalter42.buoy;
 
 import java.util.UUID;
 import org.bukkit.Location;
+import org.bukkit.util.Vector;
 
 /**
  *
@@ -118,4 +119,15 @@ public class WaterPathItem {
                 );
     }
     
+    public Vector getVector() {
+        return mid_position.getVector();
+    }
+    
+    public double distanceSquared(WaterPathItem lItem) {
+        return getVector().distanceSquared(lItem.getVector());
+    }
+
+    public double distance(WaterPathItem lItem) {
+        return getVector().distance(lItem.getVector());
+    }
 }

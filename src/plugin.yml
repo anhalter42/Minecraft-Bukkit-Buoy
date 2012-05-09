@@ -2,3 +2,9 @@
 name: Buoy
 main: com.mahn42.anhalter42.buoy.BuoyMain
 version: 0.1
+commands:
+   listbuoys:
+      description: List all buoys in the current world.
+      usage: /listbuoys
+      permission: buoy.basic
+      permission-message: You don't have permission

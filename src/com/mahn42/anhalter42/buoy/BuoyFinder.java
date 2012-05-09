@@ -29,12 +29,7 @@ public class BuoyFinder implements Runnable {
     public void run() {
         Location lLoc = startBlock.getLocation();
         World lWorld = startBlock.getWorld();
-        File lFolder = lWorld.getWorldFolder();
-        String lPath = lFolder.getPath();
-        lPath = lPath + File.separatorChar + "buoy.csv";
-        File lFile = new File(lPath);
-        WaterPathDB lDB = new WaterPathDB(lFile);
-        lDB.load();
+        WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
         byte aColor;
         if (startBlock.getData() == 14) {
             aColor = 13;
@@ -52,9 +47,11 @@ public class BuoyFinder implements Runnable {
             }
             if (!lDB.contains(lLoc.getBlockX(), lLoc.getBlockY(), lLoc.getBlockZ())) {
                 WaterPathItem lItem = new WaterPathItem(lLoc, lLoc2);
+                /*
                 lWorld.getBlockAt(lItem.mid_position.x, lItem.mid_position.y, lItem.mid_position.z).setTypeIdAndData(35, (byte) 2, true);
                 lWorld.getBlockAt(lItem.way_red_position.x, lItem.way_red_position.y, lItem.way_red_position.z).setTypeIdAndData(35, (byte) 14, true);
                 lWorld.getBlockAt(lItem.way_green_position.x, lItem.way_green_position.y, lItem.way_green_position.z).setTypeIdAndData(35, (byte) 13, true);
+                */
                 lDB.addItem(lItem);
                 lDB.save();
                 player.sendMessage("Buoy activated.");

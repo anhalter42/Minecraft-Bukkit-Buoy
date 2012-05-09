@@ -6,6 +6,7 @@ package com.mahn42.anhalter42.buoy;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 
 /**
  *
@@ -57,5 +58,9 @@ public class BlockPosition {
     
     public boolean isAt(int aX, int aY, int aZ) {
         return (x == aX) && (y == aY) && (z == aZ);
+    }
+    
+    public Vector getVector() {
+        return new Vector(x,y,z);
     }
 }
