@@ -26,9 +26,13 @@ public class WaterPathDB {
         if (store.exists()) {
             try {
                 BufferedReader lReader = new BufferedReader(new FileReader(store));
-                String line;
-                while ((line = lReader.readLine()) != null) {
-                    WaterPathItem lItem = new WaterPathItem(line);
+                String lLine;
+                String lHeader = null;
+                while ((lLine = lReader.readLine()) != null) {
+                    if (lHeader == null) {
+                        lHeader = lLine;
+                    }
+                    WaterPathItem lItem = new WaterPathItem(lHeader, lLine);
                     addItem(lItem);
                 }
             } catch (IOException ex) {
