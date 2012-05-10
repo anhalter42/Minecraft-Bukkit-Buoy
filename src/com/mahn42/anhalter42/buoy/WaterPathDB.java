@@ -61,6 +61,7 @@ public class WaterPathDB implements Iterable<WaterPathItem> {
     }
     
     public void addItem(WaterPathItem aItem) {
+        /*
         int lIndex = 0;
         int lFoundIndex = -1;
         double lDistance = Double.MAX_VALUE;
@@ -80,10 +81,9 @@ public class WaterPathDB implements Iterable<WaterPathItem> {
             lLastTempDistance = lTempDistance;
             lIndex++;
         }
-        if (lFoundIndex < 0) {
-            lFoundIndex = 0;
-        }
-        fItems.add(lFoundIndex, aItem);
+        fItems.add(lFoundIndex + 1, aItem);
+        */
+        fItems.add(aItem);
     }
     
     public WaterPathItem getItem(int aIndex) {

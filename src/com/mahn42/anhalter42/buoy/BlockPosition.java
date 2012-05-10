@@ -33,8 +33,18 @@ public class BlockPosition {
         z = aLocation.getBlockZ();
     }
     
+    public BlockPosition(BlockPosition aPos) {
+        x = aPos.x;
+        y = aPos.y;
+        z = aPos.z;
+    }
+    
     public Location getLocation(World aWorld) {
         return new Location(aWorld, x, y, z);
+    }
+    
+    public int getBlockTypeId(World aWorld) {
+        return aWorld.getBlockTypeIdAt(x, y, z);
     }
     
     @Override

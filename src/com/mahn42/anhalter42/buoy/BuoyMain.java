@@ -6,9 +6,8 @@ package com.mahn42.anhalter42.buoy;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.logging.Logger;
 import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -23,12 +22,15 @@ public class BuoyMain extends JavaPlugin {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        for(BlockPosition lPos : new WorldLineWalk(new BlockPosition(0, 0, 0), new BlockPosition(10, 20, 30))) {
+            Logger.getLogger("xyz").info(lPos.toString());
+        }
     }
 
     @Override
     public void onEnable() { 
         this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
-        getCommand("listbuoys").setExecutor(new CommandListBuoys(this));
+        getCommand("buoy_list").setExecutor(new CommandListBuoys(this));
     }
     
     public WaterPathDB getWaterPathDB(String aWorldName) {
