@@ -6,6 +6,7 @@ package com.mahn42.anhalter42.buoy;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -29,6 +30,7 @@ public class BuoyFinder implements Runnable {
             
     @Override
     public void run() {
+        Logger.getLogger("buoy").info("begin");
         Location lLoc = startBlock.getLocation();
         World lWorld = startBlock.getWorld();
         WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
@@ -39,6 +41,7 @@ public class BuoyFinder implements Runnable {
             aColor = 14;
         }
         Block[] lBlocks = findNearestBuoy(lWorld, lLoc, 40, null, aColor);
+        Logger.getLogger("buoy").info("found " + new Integer(lBlocks.length).toString());
         if (lBlocks.length > 0) {
             for(Block lBlock : lBlocks) {
                 Location lLoc2;
@@ -51,7 +54,7 @@ public class BuoyFinder implements Runnable {
                 boolean lWaterLine = true;
                 for(BlockPosition lPos : new WorldLineWalk(lLoc, lLoc2)) {
                     int lId = lPos.getBlockTypeId(lWorld);
-                    if (!((lId == 8) || (lId == 9))) {
+                    if (!((lId == 8) || (lId == 9) || (lId == 35))) {
                         lWaterLine = false;
                         break;
                     }
@@ -72,11 +75,14 @@ public class BuoyFinder implements Runnable {
                         player.sendMessage("Buoy is already active.");
                     }
                     break;
+                } else {
+                    player.sendMessage("Buoys must have a direct link with water only!");
                 }
             }
         } else {
             player.sendMessage("no corresponding buoy found. you need red and green buoy.");
         }
+        Logger.getLogger("buoy").info("end");
     }
     
     // 1 3  2 5  3 7  4 9
