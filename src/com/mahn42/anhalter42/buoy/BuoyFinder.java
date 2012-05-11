@@ -4,7 +4,6 @@
  */
 package com.mahn42.anhalter42.buoy;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import org.bukkit.Effect;
@@ -62,12 +61,7 @@ public class BuoyFinder implements Runnable {
                 if (lWaterLine) {
                     if (!lDB.contains(lLoc.getBlockX(), lLoc.getBlockY(), lLoc.getBlockZ())) {
                         WaterPathItem lItem = new WaterPathItem(lLoc, lLoc2);
-                        /*
-                        lWorld.getBlockAt(lItem.mid_position.x, lItem.mid_position.y, lItem.mid_position.z).setTypeIdAndData(35, (byte) 2, true);
-                        lWorld.getBlockAt(lItem.way_red_position.x, lItem.way_red_position.y, lItem.way_red_position.z).setTypeIdAndData(35, (byte) 14, true);
-                        lWorld.getBlockAt(lItem.way_green_position.x, lItem.way_green_position.y, lItem.way_green_position.z).setTypeIdAndData(35, (byte) 13, true);
-                        */
-                        lDB.addItem(lItem);
+                        lDB.addRecord(lItem);
                         lDB.save(); // TODO save it later (perhaps every minute)
                         player.sendMessage("Buoy activated.");
                         player.playEffect(lLoc, Effect.SMOKE, 1);
@@ -80,7 +74,7 @@ public class BuoyFinder implements Runnable {
                 }
             }
         } else {
-            player.sendMessage("no corresponding buoy found. you need red and green buoy.");
+            player.sendMessage("No corresponding buoy found. You need red and green buoy.");
         }
         Logger.getLogger("buoy").info("end");
     }

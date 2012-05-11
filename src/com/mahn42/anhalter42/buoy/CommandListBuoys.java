@@ -26,7 +26,7 @@ public class CommandListBuoys implements CommandExecutor {
         if (aCommandSender instanceof Player) {
           Player lPlayer = (Player) aCommandSender;
           WaterPathDB lDB = plugin.getWaterPathDB(lPlayer.getWorld().getName());
-          lPlayer.sendMessage("count:" + new Integer(lDB.fItems.size()).toString());
+          lPlayer.sendMessage("count:" + new Integer(lDB.size()).toString());
           for(WaterPathItem lItem : lDB) {
               lPlayer.sendMessage(lItem.toString());
           }
