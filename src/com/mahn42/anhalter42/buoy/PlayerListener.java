@@ -7,6 +7,7 @@ package com.mahn42.anhalter42.buoy;
 import java.util.ArrayList;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Boat;
@@ -52,6 +53,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void playerInteract(PlayerInteractEvent event) {
         Player lPlayer = event.getPlayer();
+        World lWorld = lPlayer.getWorld();
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             Block lBlock = event.getClickedBlock();
             if (lBlock != null) {
@@ -74,11 +76,11 @@ public class PlayerListener implements Listener {
             }
         } else if (event.getAction().equals(Action.RIGHT_CLICK_AIR) ) { // && lPlayer.getVehicle() != null && lPlayer.getVehicle() instanceof Boat) {
             //lPlayer.sendMessage("Interact with air");
-            WaterPathDB lDB = plugin.getWaterPathDB(event.getPlayer().getWorld().getName());
+            WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
             Location lLocation = lPlayer.getLocation();
             Block lBlock = lPlayer.getTargetBlock(null, 20);
             if (lBlock != null) {
-                event.getPlayer().sendMessage("block at " + lBlock.toString());
+                //lPlayer.sendMessage("block at " + lBlock.toString());
                 Vector lVector = new Vector(lBlock.getX() - lLocation.getBlockX(), lBlock.getY() - lLocation.getBlockY(), lBlock.getZ() - lLocation.getBlockZ());
                 //lPlayer.sendMessage(lVector.toString());
                 ArrayList<WaterPathItem> lBuoys = lDB.getItemNearlyDirection(lLocation, 40, lVector, 0.0f, 0.7f);
@@ -86,6 +88,11 @@ public class PlayerListener implements Listener {
                 if (lBuoys.size() > 0) {
                     for(WaterPathItem lItem : lBuoys) {
                         lPlayer.sendMessage("Lets travel... " + lItem.toString());
+                        Location lLoc = lItem.mid_position.getLocation(lWorld);
+                        lLoc.setY(lPlayer.getLocation().getY());
+                        lLoc.setPitch(lPlayer.getLocation().getPitch());
+                        lLoc.setYaw(lPlayer.getLocation().getYaw());
+                        lPlayer.teleport(lLoc);
                     }
                 } else {
                     lPlayer.sendMessage("No buoy found in this direction!");
