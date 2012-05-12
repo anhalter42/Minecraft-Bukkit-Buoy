@@ -29,7 +29,7 @@ public class BuoyFinder implements Runnable {
             
     @Override
     public void run() {
-        Logger.getLogger("buoy").info("begin");
+        //Logger.getLogger("buoy").info("begin");
         Location lLoc = startBlock.getLocation();
         World lWorld = startBlock.getWorld();
         WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
@@ -39,8 +39,8 @@ public class BuoyFinder implements Runnable {
         } else {
             aColor = 14;
         }
-        Block[] lBlocks = findNearestBuoy(lWorld, lLoc, 40, null, aColor);
-        Logger.getLogger("buoy").info("found " + new Integer(lBlocks.length).toString());
+        Block[] lBlocks = findNearestBuoy(lWorld, lLoc, 60, null, aColor);
+        //Logger.getLogger("buoy").info("found " + new Integer(lBlocks.length).toString());
         if (lBlocks.length > 0) {
             for(Block lBlock : lBlocks) {
                 Location lLoc2;
@@ -59,15 +59,18 @@ public class BuoyFinder implements Runnable {
                     }
                 }
                 if (lWaterLine) {
-                    if (!lDB.contains(lLoc.getBlockX(), lLoc.getBlockY(), lLoc.getBlockZ())) {
-                        WaterPathItem lItem = new WaterPathItem(lLoc, lLoc2);
+                    WaterPathItem lItem = lDB.getItemAt(lLoc);
+                    if (lItem == null) {
+                        lItem = new WaterPathItem(lLoc, lLoc2);
                         lDB.addRecord(lItem);
-                        lDB.save(); // TODO save it later (perhaps every minute)
                         player.sendMessage("Buoy activated.");
-                        player.playEffect(lLoc, Effect.SMOKE, 1);
+                        player.playEffect(lLoc, Effect.CLICK2, (byte)0);
+                        updateLinks(lDB, lItem);
                     } else {
                         player.sendMessage("Buoy is already active.");
+                        updateLinks(lDB, lItem);
                     }
+                    lDB.save(); // TODO save it later (perhaps every minute)
                     break;
                 } else {
                     player.sendMessage("Buoys must have a direct link with water only!");
@@ -76,7 +79,7 @@ public class BuoyFinder implements Runnable {
         } else {
             player.sendMessage("No corresponding buoy found. You need red and green buoy.");
         }
-        Logger.getLogger("buoy").info("end");
+        //Logger.getLogger("buoy").info("end");
     }
     
     // 1 3  2 5  3 7  4 9
@@ -145,5 +148,9 @@ public class BuoyFinder implements Runnable {
             lIndex++;
         }
         return lBlocks;
+    }
+
+    protected void updateLinks(WaterPathDB aDB, WaterPathItem aItem) {
+        aDB.updateLinks(aItem);
     }
 }

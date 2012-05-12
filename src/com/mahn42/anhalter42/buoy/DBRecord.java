@@ -14,6 +14,35 @@ import java.util.UUID;
  */
 public class DBRecord {
 
+    protected class DBRecordCSVArray {
+        ArrayList<String> fCols = new ArrayList<String>();
+        
+        public DBRecordCSVArray(String aLine) {
+            String[] lArray = aLine.split(";");
+            fCols.addAll(Arrays.asList(lArray));
+        }
+        
+        public String pop() {
+            String lCol;
+            if (fCols.size() > 0) {
+                lCol = fCols.get(0);
+                fCols.remove(0);
+            } else {
+                lCol = "";
+            }
+            return lCol;
+        }
+
+        public int popInt() {
+            String lCol = pop();
+            return new Integer(lCol).intValue();
+        }
+        
+        public void popKeys(ArrayList<String> aArray) {
+            DBRecord.stringToKeys(pop(), aArray);
+        }
+    }
+    
     public String key;
     
     public DBRecord() {
@@ -29,7 +58,12 @@ public class DBRecord {
         String lLine = null;
         toCSVInternal(lCols);
         for(Object lObject : lCols) {
-            String lCol = (String) lObject.toString();
+            String lCol;
+            if (lObject != null) {
+                lCol = (String) lObject.toString();
+            } else {
+                lCol = "";
+            }
             if (lLine == null) {
                 lLine = lCol;
             } else {
@@ -44,15 +78,12 @@ public class DBRecord {
     }
     
     public void fromCSV(String aHeader, String aLine) {
-        String[] lArray = aLine.split(";");
-        ArrayList lCols = new ArrayList();
-        lCols.addAll(Arrays.asList(lArray));
+        DBRecordCSVArray lCols = new DBRecordCSVArray(aLine);
         fromCSVInternal(lCols);
     }
     
-    protected void fromCSVInternal(ArrayList aCols) {
-        key = (String) aCols.get(0);
-        aCols.remove(0);
+    protected void fromCSVInternal(DBRecordCSVArray aCols) {
+        key = (String) aCols.pop();
     }
 
     public boolean isSameRecord(DBRecord aRecord) {
@@ -74,4 +105,46 @@ public class DBRecord {
         return getClass().getName() + ":" + key;
     }
     
+    public static String arrayToString(Iterable aArray) {
+        String lResult = null;
+        for (Object lObject : aArray) {
+            if (lResult == null) {
+                lResult = lObject.toString();
+            } else {
+                lResult = lResult + ',' + lObject.toString();
+            }
+        }
+        return lResult;
+    }
+
+    public static String arrayToKeys(Iterable aArray) {
+        String lResult = null;
+        for (Object lObject : aArray) {
+            if (lObject != null) {
+                String lStr = lObject.toString();
+                if (!lStr.equals("") && !lStr.isEmpty()) {
+                    if (lResult == null) {
+                        lResult = lStr;
+                    } else {
+                        lResult = lResult + ',' + lStr;
+                    }
+                }
+            }
+        }
+        return lResult;
+    }
+
+    public static void stringToArray(String aString, ArrayList aArray) {
+        String lStrings[] = aString.split(",");
+        aArray.addAll(Arrays.asList(lStrings));
+    }
+
+    public static void stringToKeys(String aString, ArrayList<String> aArray) {
+        String lStrings[] = aString.split(",");
+        for(String lString : lStrings) {
+            if (lString != null && !lString.isEmpty() && !lString.equals("")) {
+                aArray.add(lString);
+            }
+        }
+    }
 }

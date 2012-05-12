@@ -19,6 +19,8 @@ public class WaterPathItem extends DBRecord {
     public BlockPosition mid_position;
     public BlockPosition way_green_position;
     public BlockPosition way_red_position;
+    public ArrayList<String> red_links;
+    public ArrayList<String> green_links;
     
     @Override
     protected void init() {
@@ -28,6 +30,8 @@ public class WaterPathItem extends DBRecord {
         if (mid_position == null) mid_position = new BlockPosition();
         if (way_green_position == null) way_green_position = new BlockPosition();
         if (way_red_position == null) way_red_position = new BlockPosition();
+        if (red_links == null) red_links = new ArrayList<String>();
+        if (green_links == null) green_links = new ArrayList<String>();
     }
     
     public WaterPathItem() {
@@ -93,26 +97,30 @@ public class WaterPathItem extends DBRecord {
         aCols.add(way_green_position.x);
         aCols.add(way_green_position.y);
         aCols.add(way_green_position.z);
+        aCols.add(arrayToKeys(red_links));
+        aCols.add(arrayToKeys(green_links));
     }
     
     @Override
-    protected void fromCSVInternal(ArrayList aCols) {
+    protected void fromCSVInternal(DBRecordCSVArray aCols) {
         super.fromCSVInternal(aCols);
-        red_position.x = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
-        red_position.y = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
-        red_position.z = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
-        green_position.x = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
-        green_position.y = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
-        green_position.z = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
-        mid_position.x = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
-        mid_position.y = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
-        mid_position.z = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
-        way_red_position.x = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
-        way_red_position.y = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
-        way_red_position.z = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
-        way_green_position.x = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
-        way_green_position.y = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
-        way_green_position.z = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
+        red_position.x = aCols.popInt();
+        red_position.y = aCols.popInt();
+        red_position.z = aCols.popInt();
+        green_position.x = aCols.popInt();
+        green_position.y = aCols.popInt();
+        green_position.z = aCols.popInt();
+        mid_position.x = aCols.popInt();
+        mid_position.y = aCols.popInt();
+        mid_position.z = aCols.popInt();
+        way_red_position.x = aCols.popInt();
+        way_red_position.y = aCols.popInt();
+        way_red_position.z = aCols.popInt();
+        way_green_position.x = aCols.popInt();
+        way_green_position.y = aCols.popInt();
+        way_green_position.z = aCols.popInt();
+        aCols.popKeys(red_links);
+        aCols.popKeys(green_links);
     }
     
     public void calcPositions() {
