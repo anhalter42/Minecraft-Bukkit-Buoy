@@ -36,23 +36,19 @@ public class DBSet<T extends DBRecord> implements Iterable<T> {
             try {
                 BufferedReader lReader = new BufferedReader(new FileReader(fStore));
                 String lLine;
-                String lHeader = null;
+                String lHeader = lReader.readLine();
                 while ((lLine = lReader.readLine()) != null) {
-                    if (lHeader == null) {
-                        lHeader = lLine;
-                    } else {
-                        T lRecord = null;
-                        try {
-                            lRecord = fRecordClass.newInstance();
-                        } catch (InstantiationException ex) {
-                            Logger.getLogger(DBSet.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (IllegalAccessException ex) {
-                            Logger.getLogger(DBSet.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        if (lRecord != null) {
-                            lRecord.fromCSV(lHeader, lLine);
-                            addRecord(lRecord);
-                        }
+                    T lRecord = null;
+                    try {
+                        lRecord = fRecordClass.newInstance();
+                    } catch (InstantiationException ex) {
+                        Logger.getLogger(DBSet.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IllegalAccessException ex) {
+                        Logger.getLogger(DBSet.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    if (lRecord != null) {
+                        lRecord.fromCSV(lHeader, lLine);
+                        addRecordInternal(lRecord);
                     }
                 }
             } catch (IOException ex) {
@@ -88,6 +84,10 @@ public class DBSet<T extends DBRecord> implements Iterable<T> {
     }
     
     public void addRecord(T aRecord) {
+        addRecordInternal(aRecord);
+    }
+    
+    protected void addRecordInternal(T aRecord) {
         if (aRecord != null) {
             fRecords.add(aRecord);
             fKeyIndex.put(aRecord.key, aRecord);

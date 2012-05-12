@@ -44,7 +44,7 @@ public class DBRecord {
     }
     
     public void fromCSV(String aHeader, String aLine) {
-        String[] lArray = aLine.split(aLine);
+        String[] lArray = aLine.split(";");
         ArrayList lCols = new ArrayList();
         lCols.addAll(Arrays.asList(lArray));
         fromCSVInternal(lCols);

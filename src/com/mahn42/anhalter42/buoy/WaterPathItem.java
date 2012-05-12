@@ -20,6 +20,7 @@ public class WaterPathItem extends DBRecord {
     public BlockPosition way_green_position;
     public BlockPosition way_red_position;
     
+    @Override
     protected void init() {
         super.init();
         if (red_position == null) red_position = new BlockPosition();
@@ -96,6 +97,7 @@ public class WaterPathItem extends DBRecord {
     
     @Override
     protected void fromCSVInternal(ArrayList aCols) {
+        super.fromCSVInternal(aCols);
         red_position.x = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
         red_position.y = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
         red_position.z = new Integer((String)aCols.get(0)).intValue(); aCols.remove(0);
@@ -141,5 +143,13 @@ public class WaterPathItem extends DBRecord {
 
     public double distance(WaterPathItem lItem) {
         return getVector().distance(lItem.getVector());
+    }
+
+    public double distance(int aX, int aY, int aZ) {
+        return getVector().distance(new Vector(aX, aY, aZ));
+    }
+
+    public double distanceSquared(int aX, int aY, int aZ) {
+        return getVector().distanceSquared(new Vector(aX, aY, aZ));
     }
 }
