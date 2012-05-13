@@ -11,11 +11,14 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Boat;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 
 /**
@@ -74,8 +77,9 @@ public class PlayerListener implements Listener {
             } else {
                 //lPlayer.sendMessage("Interact with no block");
             }
-        } else if (event.getAction().equals(Action.RIGHT_CLICK_AIR) ) { // && lPlayer.getVehicle() != null && lPlayer.getVehicle() instanceof Boat) {
+        } else if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && lPlayer.getVehicle() != null && lPlayer.getVehicle() instanceof Boat) {
             //lPlayer.sendMessage("Interact with air");
+            Boat lBoat = (Boat)lPlayer.getVehicle();
             WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
             Location lLocation = lPlayer.getLocation();
             Block lBlock = lPlayer.getTargetBlock(null, 20);
@@ -83,21 +87,49 @@ public class PlayerListener implements Listener {
                 //lPlayer.sendMessage("block at " + lBlock.toString());
                 Vector lVector = new Vector(lBlock.getX() - lLocation.getBlockX(), lBlock.getY() - lLocation.getBlockY(), lBlock.getZ() - lLocation.getBlockZ());
                 //lPlayer.sendMessage(lVector.toString());
-                ArrayList<WaterPathItem> lBuoys = lDB.getItemNearlyDirection(lLocation, 40, lVector, 0.0f, 0.7f);
+                ArrayList<WaterPathItem> lBuoys = lDB.getItemNearlyDirection(lLocation, 60, lVector, 0.0f, 0.7f);
                 //lPlayer.sendMessage("count:" + new Integer(lBuoys.size()).toString());
                 if (lBuoys.size() > 0) {
                     for(WaterPathItem lItem : lBuoys) {
+                        BoatDriver lDriver = new BoatDriver(plugin, lBoat, lItem);
+                        int lTaskId = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, lDriver, 10, 10);
+                        lDriver.setTaskId(lTaskId);
+                        /*
                         lPlayer.sendMessage("Lets travel... " + lItem.toString());
+                        Entity lVehicle = lPlayer.getVehicle();
+                        if (lVehicle == null) {
+                            lVehicle = lPlayer;
+                        }
+                        Location lPlayerLoc = lVehicle.getLocation();
                         Location lLoc = lItem.mid_position.getLocation(lWorld);
-                        lLoc.setY(lPlayer.getLocation().getY());
-                        lLoc.setPitch(lPlayer.getLocation().getPitch());
-                        lLoc.setYaw(lPlayer.getLocation().getYaw());
-                        lPlayer.teleport(lLoc);
+                        Vector lVec = new Vector(lLoc.getX() - lPlayerLoc.getX(), lLoc.getY() - lPlayerLoc.getY(), lLoc.getZ() - lPlayerLoc.getZ());
+                        double lLength = lVec.length();
+                        lVec.multiply(1 / lLength);
+                        //lPlayer.sendMessage("v = " + lVec.toString() + " l = " + lVec.length());
+                        lVehicle.setVelocity(lVec);
+                        //lLoc.setY(lPlayer.getLocation().getY());
+                        //lLoc.setPitch(lPlayer.getLocation().getPitch());
+                        //lLoc.setYaw(lPlayer.getLocation().getYaw());
+                        //lPlayer.teleport(lLoc);
+                        * 
+                        */
+                        break;
                     }
                 } else {
                     lPlayer.sendMessage("No buoy found in this direction!");
                 }
             }
         }
+    }
+    
+    @EventHandler
+    public void playerMove(PlayerMoveEvent aEvent) {
+        /*
+        Player lPlayer = aEvent.getPlayer();
+        Vector lVel = lPlayer.getVelocity();
+        if (lVel.length() > 0.5f) {
+            lPlayer.sendMessage("Vel:" + lVel.toBlockVector().toString() + " l:" + lVel.length());
+        }
+        */
     }
 }

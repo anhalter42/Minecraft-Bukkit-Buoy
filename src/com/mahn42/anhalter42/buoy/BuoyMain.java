@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 import org.bukkit.World;
+import org.bukkit.entity.Boat;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Vector;
 
 /**
  *
@@ -18,6 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class BuoyMain extends JavaPlugin {
 
     protected HashMap<String, WaterPathDB> fWaterPathDBs;
+    protected BoatAutomatic fBoatAutomatic;
     
      /**
      * @param args the command line arguments
@@ -36,8 +39,10 @@ public class BuoyMain extends JavaPlugin {
 
     @Override
     public void onEnable() { 
-        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        fBoatAutomatic = new BoatAutomatic(this);
         getCommand("buoy_list").setExecutor(new CommandListBuoys(this));
+        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, fBoatAutomatic, 10, 10);
     }
     
     public WaterPathDB getWaterPathDB(String aWorldName) {
@@ -56,5 +61,13 @@ public class BuoyMain extends JavaPlugin {
             fWaterPathDBs.put(aWorldName, lDB);
         }
         return fWaterPathDBs.get(aWorldName);
+    }
+    
+    public void setBoatVelocity(Boat aBoat, Vector aVelocity) {
+        fBoatAutomatic.setMovement(aBoat, aVelocity);
+    }
+    
+    public void deactivateBoatMovement(Boat aBoat) {
+        fBoatAutomatic.deactivateMovement(aBoat);
     }
 }

@@ -52,6 +52,9 @@ public class BlockPosition {
         if (aObject instanceof BlockPosition) {
             BlockPosition lPos = (BlockPosition) aObject;
             return (lPos.x == x) && (lPos.y == y) && (lPos.z == z);
+        } else if (aObject instanceof Location) {
+            Location lLoc = (Location) aObject;
+            return (lLoc.getBlockX() == x) && (lLoc.getBlockY() == y) && (lLoc.getBlockZ() == z);
         } else {
             return false;
         }
