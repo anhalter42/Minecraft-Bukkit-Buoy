@@ -70,8 +70,34 @@ public class WaterPathDB extends DBSet<WaterPathItem> {
         return lResult;
     }
 
+    protected class WaterPathItemDistance implements Comparable<WaterPathItemDistance> {
+        WaterPathItem item;
+        double distance;
+        
+        WaterPathItemDistance(WaterPathItem aItem, double aDistance) {
+            item = aItem;
+            distance = aDistance;
+        }
+
+        @Override
+        public int compareTo(WaterPathItemDistance aObject) {
+            if (aObject instanceof WaterPathItemDistance) {
+                if (((WaterPathItemDistance)aObject).distance < distance) {
+                    return +1;
+                } else if (((WaterPathItemDistance)aObject).distance == distance) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            } else {
+                return 0;
+            }
+        }
+    }
+    
     public ArrayList<WaterPathItem> getItemNearlyDirection(int aX, int aY, int aZ, double aDistance, Vector aDirection, float aMinAngle, float aMaxAngle) {
         //Logger.getLogger("xxx").info("v" + aDirection.toString() + " xyz" + new Integer(aX).toString() + ","+ new Integer(aY).toString()+","+new Integer(aZ).toString());
+        ArrayList<WaterPathItemDistance> lDistances = new ArrayList<WaterPathItemDistance>();
         ArrayList<WaterPathItem> lResult = new ArrayList<WaterPathItem>();
         for (WaterPathItem lItem : this) {
             double lDistance = lItem.distance(aX, aY, aZ);
@@ -80,9 +106,13 @@ public class WaterPathDB extends DBSet<WaterPathItem> {
                 float lAngle = aDirection.angle(lVector);
                 if (aMinAngle <= lAngle && lAngle <= aMaxAngle) {
                     //Logger.getLogger("xxx").info(lItem.toString() + " v " + lVector.toString() + " Angle " + lAngle);
-                    lResult.add(lItem);
+                    lDistances.add(new WaterPathItemDistance(lItem, lDistance));
                 }
             }
+        }
+        java.util.Collections.sort(lDistances);
+        for(WaterPathItemDistance lItemDist : lDistances) {
+            lResult.add(lItemDist.item);
         }
         return lResult;
     }

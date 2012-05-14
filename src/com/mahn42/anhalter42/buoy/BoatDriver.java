@@ -48,13 +48,17 @@ public class BoatDriver implements Runnable {
         } else {
             //TODO search next buoy if one set as next if none deactivate
             plugin.deactivateBoatMovement(fBoat);
-            plugin.getServer().getScheduler().cancelTask(fTaskId);
+            //plugin.getServer().getScheduler().cancelTask(fTaskId);
             plugin.getLogger().info("boat stopped.");
         }
     }
 
     public void setTaskId(int aTaskId) {
         fTaskId = aTaskId;
+    }
+    
+    public int getTaskId() {
+        return fTaskId;
     }
     
 }

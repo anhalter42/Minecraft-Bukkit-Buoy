@@ -83,40 +83,43 @@ public class PlayerListener implements Listener {
             WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
             Location lLocation = lPlayer.getLocation();
             Block lBlock = lPlayer.getTargetBlock(null, 20);
-            if (lBlock != null) {
-                //lPlayer.sendMessage("block at " + lBlock.toString());
-                Vector lVector = new Vector(lBlock.getX() - lLocation.getBlockX(), lBlock.getY() - lLocation.getBlockY(), lBlock.getZ() - lLocation.getBlockZ());
-                //lPlayer.sendMessage(lVector.toString());
-                ArrayList<WaterPathItem> lBuoys = lDB.getItemNearlyDirection(lLocation, 60, lVector, 0.0f, 0.7f);
-                //lPlayer.sendMessage("count:" + new Integer(lBuoys.size()).toString());
-                if (lBuoys.size() > 0) {
-                    for(WaterPathItem lItem : lBuoys) {
-                        BoatDriver lDriver = new BoatDriver(plugin, lBoat, lItem);
-                        int lTaskId = plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, lDriver, 10, 10);
-                        lDriver.setTaskId(lTaskId);
-                        /*
-                        lPlayer.sendMessage("Lets travel... " + lItem.toString());
-                        Entity lVehicle = lPlayer.getVehicle();
-                        if (lVehicle == null) {
-                            lVehicle = lPlayer;
-                        }
-                        Location lPlayerLoc = lVehicle.getLocation();
-                        Location lLoc = lItem.mid_position.getLocation(lWorld);
-                        Vector lVec = new Vector(lLoc.getX() - lPlayerLoc.getX(), lLoc.getY() - lPlayerLoc.getY(), lLoc.getZ() - lPlayerLoc.getZ());
-                        double lLength = lVec.length();
-                        lVec.multiply(1 / lLength);
-                        //lPlayer.sendMessage("v = " + lVec.toString() + " l = " + lVec.length());
-                        lVehicle.setVelocity(lVec);
-                        //lLoc.setY(lPlayer.getLocation().getY());
-                        //lLoc.setPitch(lPlayer.getLocation().getPitch());
-                        //lLoc.setYaw(lPlayer.getLocation().getYaw());
-                        //lPlayer.teleport(lLoc);
-                        * 
-                        */
-                        break;
-                    }
+            if ((lBlock != null) && (lBlock.getY() > (lPlayer.getLocation().getBlockY() + 2))) { // schlag in die luft
+                if (plugin.isBoatTraveling(lBoat)) {
+                    plugin.deactivateBoatMovement(lBoat);
                 } else {
-                    lPlayer.sendMessage("No buoy found in this direction!");
+                    //lPlayer.sendMessage("block at " + lBlock.toString());
+                    Vector lVector = new Vector(lBlock.getX() - lLocation.getBlockX(), lBlock.getY() - lLocation.getBlockY(), lBlock.getZ() - lLocation.getBlockZ());
+                    //lPlayer.sendMessage(lVector.toString());
+                    ArrayList<WaterPathItem> lBuoys = lDB.getItemNearlyDirection(lLocation, 60, lVector, 0.0f, 0.7f);
+                    //lPlayer.sendMessage("count:" + new Integer(lBuoys.size()).toString());
+                    if (lBuoys.size() > 0) {
+                        for(WaterPathItem lItem : lBuoys) {
+                            lPlayer.sendMessage("Lets travel... ");
+                            plugin.startBuoyDriver(lBoat, lItem);
+                            /*
+                            lPlayer.sendMessage("Lets travel... " + lItem.toString());
+                            Entity lVehicle = lPlayer.getVehicle();
+                            if (lVehicle == null) {
+                                lVehicle = lPlayer;
+                            }
+                            Location lPlayerLoc = lVehicle.getLocation();
+                            Location lLoc = lItem.mid_position.getLocation(lWorld);
+                            Vector lVec = new Vector(lLoc.getX() - lPlayerLoc.getX(), lLoc.getY() - lPlayerLoc.getY(), lLoc.getZ() - lPlayerLoc.getZ());
+                            double lLength = lVec.length();
+                            lVec.multiply(1 / lLength);
+                            //lPlayer.sendMessage("v = " + lVec.toString() + " l = " + lVec.length());
+                            lVehicle.setVelocity(lVec);
+                            //lLoc.setY(lPlayer.getLocation().getY());
+                            //lLoc.setPitch(lPlayer.getLocation().getPitch());
+                            //lLoc.setYaw(lPlayer.getLocation().getYaw());
+                            //lPlayer.teleport(lLoc);
+                            * 
+                            */
+                            break;
+                        }
+                    } else {
+                        lPlayer.sendMessage("No buoy found in this direction!");
+                    }
                 }
             }
         }

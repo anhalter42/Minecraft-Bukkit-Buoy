@@ -21,6 +21,7 @@ public class BuoyMain extends JavaPlugin {
 
     protected HashMap<String, WaterPathDB> fWaterPathDBs;
     protected BoatAutomatic fBoatAutomatic;
+    protected HashMap<Boat, BoatDriver> fBoatDrivers;
     
      /**
      * @param args the command line arguments
@@ -40,9 +41,19 @@ public class BuoyMain extends JavaPlugin {
     @Override
     public void onEnable() { 
         fBoatAutomatic = new BoatAutomatic(this);
+        fBoatDrivers = new HashMap<Boat, BoatDriver>();
         getCommand("buoy_list").setExecutor(new CommandListBuoys(this));
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getScheduler().scheduleSyncRepeatingTask(this, fBoatAutomatic, 10, 10);
+    }
+    
+    @Override
+    public void onDisable() { 
+        if (fWaterPathDBs != null) {
+            for(WaterPathDB lDB : fWaterPathDBs.values()) {
+                lDB.save();
+            }
+        }
     }
     
     public WaterPathDB getWaterPathDB(String aWorldName) {
@@ -67,14 +78,25 @@ public class BuoyMain extends JavaPlugin {
         fBoatAutomatic.setMovement(aBoat, aVelocity);
     }
     
+    public boolean isBoatTraveling(Boat aBoat) {
+        return fBoatDrivers.containsKey(aBoat);
+    }
+    
     public void deactivateBoatMovement(Boat aBoat) {
         fBoatAutomatic.deactivateMovement(aBoat);
+        if (fBoatDrivers.containsKey(aBoat)) {
+            BoatDriver lDriver = fBoatDrivers.get(aBoat);
+            getLogger().info("boat deactivated. " + new Integer(lDriver.getTaskId()).toString());
+            getServer().getScheduler().cancelTask(lDriver.getTaskId());
+            fBoatDrivers.remove(aBoat);
+        }
     }
     
     public void startBuoyDriver(Boat aBoat, WaterPathItem aItem) {
-        //TODO hold BoatDriver in List
         BoatDriver lDriver = new BoatDriver(this, aBoat, aItem);
-        int lTaskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, lDriver, 10, 10);
+        int lTaskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, lDriver, 1, 10);
         lDriver.setTaskId(lTaskId);
+        getLogger().info("boat activated. " + new Integer(lDriver.getTaskId()).toString());
+        fBoatDrivers.put(aBoat, lDriver);
     }
 }
