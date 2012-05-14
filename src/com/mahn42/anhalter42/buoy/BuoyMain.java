@@ -92,8 +92,8 @@ public class BuoyMain extends JavaPlugin {
         }
     }
     
-    public void startBuoyDriver(Boat aBoat, WaterPathItem aItem) {
-        BoatDriver lDriver = new BoatDriver(this, aBoat, aItem);
+    public void startBuoyDriver(Boat aBoat, WaterPathItem aItem, BoatDriver.Side aSide) {
+        BoatDriver lDriver = new BoatDriver(this, aBoat, aItem, aSide);
         int lTaskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, lDriver, 1, 10);
         lDriver.setTaskId(lTaskId);
         getLogger().info("boat activated. " + new Integer(lDriver.getTaskId()).toString());

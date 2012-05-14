@@ -95,7 +95,7 @@ public class PlayerListener implements Listener {
                     if (lBuoys.size() > 0) {
                         for(WaterPathItem lItem : lBuoys) {
                             lPlayer.sendMessage("Lets travel... ");
-                            plugin.startBuoyDriver(lBoat, lItem);
+                            plugin.startBuoyDriver(lBoat, lItem, BoatDriver.Side.Red);
                             /*
                             lPlayer.sendMessage("Lets travel... " + lItem.toString());
                             Entity lVehicle = lPlayer.getVehicle();

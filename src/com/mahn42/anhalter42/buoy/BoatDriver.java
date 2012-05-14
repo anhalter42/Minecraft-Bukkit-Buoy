@@ -14,21 +14,32 @@ import org.bukkit.util.Vector;
  */
 public class BoatDriver implements Runnable {
 
+    public enum Side {
+        Red,
+        Green
+    }
     protected BuoyMain plugin;
     protected Boat fBoat;
     protected WaterPathItem fDestination;
     protected int fTaskId;
+    protected Side fSide;
     
-    public BoatDriver(BuoyMain aPlugin, Boat aBoat, WaterPathItem aBuoy) {
+    public BoatDriver(BuoyMain aPlugin, Boat aBoat, WaterPathItem aBuoy, Side aSide) {
         plugin = aPlugin;
         fBoat = aBoat;
         fDestination = aBuoy;
+        fSide = aSide;
     }
     
     @Override
     public void run() {
         Location lBoatLoc = fBoat.getLocation();
-        Location lLoc = fDestination.mid_position.getLocation(fBoat.getWorld());
+        Location lLoc;
+        if (fSide == Side.Red) {
+            lLoc = fDestination.red_position.getLocation(fBoat.getWorld());
+        } else {
+            lLoc = fDestination.green_position.getLocation(fBoat.getWorld());
+        }
         lLoc.add(0.0f, 1.0f, 0.0f);
         double lDistance = lBoatLoc.distance(lLoc);
         if (lDistance > 1.0f) {
