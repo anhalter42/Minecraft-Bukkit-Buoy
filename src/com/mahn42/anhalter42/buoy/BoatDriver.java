@@ -36,9 +36,9 @@ public class BoatDriver implements Runnable {
         Location lBoatLoc = fBoat.getLocation();
         Location lLoc;
         if (fSide == Side.Red) {
-            lLoc = fDestination.red_position.getLocation(fBoat.getWorld());
+            lLoc = fDestination.way_red_position.getLocation(fBoat.getWorld());
         } else {
-            lLoc = fDestination.green_position.getLocation(fBoat.getWorld());
+            lLoc = fDestination.way_green_position.getLocation(fBoat.getWorld());
         }
         lLoc.add(0.0f, 1.0f, 0.0f);
         double lDistance = lBoatLoc.distance(lLoc);
