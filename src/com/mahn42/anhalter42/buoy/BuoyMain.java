@@ -70,4 +70,11 @@ public class BuoyMain extends JavaPlugin {
     public void deactivateBoatMovement(Boat aBoat) {
         fBoatAutomatic.deactivateMovement(aBoat);
     }
+    
+    public void startBuoyDriver(Boat aBoat, WaterPathItem aItem) {
+        //TODO hold BoatDriver in List
+        BoatDriver lDriver = new BoatDriver(this, aBoat, aItem);
+        int lTaskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, lDriver, 10, 10);
+        lDriver.setTaskId(lTaskId);
+    }
 }

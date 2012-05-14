@@ -35,8 +35,12 @@ public class BoatDriver implements Runnable {
             Vector lVec = new Vector(lLoc.getX() - lBoatLoc.getX(), lLoc.getY() - lBoatLoc.getY(), lLoc.getZ() - lBoatLoc.getZ());
             //double lLength = lVec.length();
             //if (lLength > 1) {
-                lVec.multiply((1 / lDistance) / 2.0f);
-                plugin.setBoatVelocity(fBoat, lVec);
+            double lFactor = (1 / lDistance) / 4.0f;
+            if (lDistance < 4.0f) {
+                lFactor = lFactor / (5.0f - lDistance);
+            }
+            lVec.multiply(lFactor);
+            plugin.setBoatVelocity(fBoat, lVec);
             //} else {
             //    plugin.deactivateBoatMovement(fBoat);
             //    plugin.getServer().getScheduler().cancelTask(fTaskId);
@@ -45,6 +49,7 @@ public class BoatDriver implements Runnable {
             //TODO search next buoy if one set as next if none deactivate
             plugin.deactivateBoatMovement(fBoat);
             plugin.getServer().getScheduler().cancelTask(fTaskId);
+            plugin.getLogger().info("boat stopped.");
         }
     }
 
