@@ -49,23 +49,33 @@ public class WaterPathDB extends DBSet<WaterPathItem> {
     }
     
     public ArrayList<WaterPathItem> getItemNearly(int aX, int aY, int aZ, double aDistance) {
+        ArrayList<WaterPathItemDistance> lDistances = new ArrayList<WaterPathItemDistance>();
         ArrayList<WaterPathItem> lResult = new ArrayList<WaterPathItem>();
         for (WaterPathItem lItem : this) {
             double lDistance = lItem.distance(aX, aY, aZ);
             if (lDistance <= aDistance) {
-                lResult.add(lItem);
+                lDistances.add(new WaterPathItemDistance(lItem, lDistance));
             }
+        }
+        java.util.Collections.sort(lDistances);
+        for(WaterPathItemDistance lItemDist : lDistances) {
+            lResult.add(lItemDist.item);
         }
         return lResult;
     }
 
     public ArrayList<WaterPathItem> getItemNearlySquared(int aX, int aY, int aZ, double aDistanceSquared) {
+        ArrayList<WaterPathItemDistance> lDistances = new ArrayList<WaterPathItemDistance>();
         ArrayList<WaterPathItem> lResult = new ArrayList<WaterPathItem>();
         for (WaterPathItem lItem : this) {
             double lDistance = lItem.distanceSquared(aX, aY, aZ);
             if (lDistance <= aDistanceSquared) {
-                lResult.add(lItem);
+                lDistances.add(new WaterPathItemDistance(lItem, lDistance));
             }
+        }
+        java.util.Collections.sort(lDistances);
+        for(WaterPathItemDistance lItemDist : lDistances) {
+            lResult.add(lItemDist.item);
         }
         return lResult;
     }
