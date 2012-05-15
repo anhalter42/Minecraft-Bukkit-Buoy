@@ -133,6 +133,14 @@ public class WaterPathDB extends DBSet<WaterPathItem> {
     public ArrayList<WaterPathItem> getItemNearlyDirection(BlockPosition aPos, double aDistance, Vector aDirection, float aMinAngle, float aMaxAngle) {
         return getItemNearlyDirection(aPos.x, aPos.y, aPos.z, aDistance, aDirection, aMinAngle, aMaxAngle);
     }
+    
+    @Override
+    protected void removedRecord(WaterPathItem aRecord) {
+        for(WaterPathItem lItem : this) {
+            lItem.red_links.remove(aRecord.key);
+            lItem.green_links.remove(aRecord.key);
+        }
+    }
 
     public void updateLinks(WaterPathItem aItem) {
         //Logger.getLogger("updateLinks").info(aItem.toString());

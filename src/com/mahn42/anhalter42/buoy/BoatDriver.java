@@ -114,11 +114,13 @@ public class BoatDriver implements Runnable {
                         double lMinAngle = Double.MAX_VALUE;
                         for(String lKey : fDestination.red_links) {
                             WaterPathItem lItem = lDB.getRecord(lKey);
-                            Vector lVector = lItem.red_position.getVector().subtract(fDestination.red_position.getVector());
-                            double lAngle = lVector.angle(fStartVector);
-                            if (lAngle < lMinAngle) {
-                                lMinAngle = lAngle;
-                                lNewItem = lItem;
+                            if (lItem != null) {
+                                Vector lVector = lItem.red_position.getVector().subtract(fDestination.red_position.getVector());
+                                double lAngle = lVector.angle(fStartVector);
+                                if (lAngle < lMinAngle) {
+                                    lMinAngle = lAngle;
+                                    lNewItem = lItem;
+                                }
                             }
                         }
                         lNextDestination = lNewItem;
@@ -127,11 +129,13 @@ public class BoatDriver implements Runnable {
                         double lMinAngle = Double.MAX_VALUE;
                         for(String lKey : fDestination.green_links) {
                             WaterPathItem lItem = lDB.getRecord(lKey);
-                            Vector lVector = lItem.green_position.getVector().subtract(fDestination.green_position.getVector());
-                            double lAngle = lVector.angle(fStartVector);
-                            if (lAngle < lMinAngle) {
-                                lMinAngle = lAngle;
-                                lNewItem = lItem;
+                            if (lItem != null) {
+                                Vector lVector = lItem.green_position.getVector().subtract(fDestination.green_position.getVector());
+                                double lAngle = lVector.angle(fStartVector);
+                                if (lAngle < lMinAngle) {
+                                    lMinAngle = lAngle;
+                                    lNewItem = lItem;
+                                }
                             }
                         }
                         lNextDestination = lNewItem;

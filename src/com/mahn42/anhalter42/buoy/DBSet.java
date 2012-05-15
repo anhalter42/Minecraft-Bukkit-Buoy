@@ -94,9 +94,13 @@ public class DBSet<T extends DBRecord> implements Iterable<T> {
         }
     }
     
+    protected void removedRecord(T aRecord) {
+    }
+    
     public void remove(T aRecord) {
         fRecords.remove(aRecord);
         fKeyIndex.remove(aRecord.key);
+        removedRecord(aRecord);
     }
     
     public void remove(int aIndex) {
