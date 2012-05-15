@@ -9,11 +9,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Boat;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -57,68 +54,105 @@ public class PlayerListener implements Listener {
     public void playerInteract(PlayerInteractEvent event) {
         Player lPlayer = event.getPlayer();
         World lWorld = lPlayer.getWorld();
+        //TODO only with special item in hand
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             Block lBlock = event.getClickedBlock();
             if (lBlock != null) {
-                //lPlayer.sendMessage("Interact with " + new Integer(lBlock.getTypeId()) + " at " + lBlock.getLocation().toString());
                 if (lBlock.getType().equals(Material.WOOL)) {
                     int lColor = lBlock.getData();
-                    //lPlayer.sendMessage("Color " + new Integer(lColor));
                     Location lLoc = lBlock.getLocation();
                     if ((lColor == 14) || (lColor == 13)) { // red or green
-                        int lTypeId = lBlock.getWorld().getBlockTypeIdAt(lLoc.getBlockX(), lLoc.getBlockY() - 1, lLoc.getBlockZ());
-                        if ((lTypeId == 9) || (lTypeId == 8)) {
-                            //lPlayer.sendMessage("searching buoy " + lLoc.toString());
-                            BuoyFinder lTask = new BuoyFinder(plugin, lBlock, event.getPlayer());
-                            plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, lTask);
+                        if (!lPlayer.isSneaking()) {
+                            int lTypeId = lBlock.getWorld().getBlockTypeIdAt(lLoc.getBlockX(), lLoc.getBlockY() - 1, lLoc.getBlockZ());
+                            if ((lTypeId == 9) || (lTypeId == 8)) {
+                                //
+                                // insert new buoy
+                                //
+                                BuoyFinder lTask = new BuoyFinder(plugin, lBlock, event.getPlayer());
+                                plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, lTask);
+                            }
+                        } else {
+                            //
+                            // clear destinations
+                            //
+                            WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
+                            WaterPathItem lBuoy = lDB.getItemAt(lLoc);
+                            if (lBuoy != null) {
+                                if (lColor == 14) { // red
+                                    lBuoy.red_links.clear();
+                                    lPlayer.sendMessage("Clearing red destinations!");
+                                } else { // green
+                                    lBuoy.green_links.clear();
+                                    lPlayer.sendMessage("Clearing green destinations!");
+                                }
+                            } else {
+                                lPlayer.sendMessage("No buoy for clearing destinations!");
+                            }
                         }
                     }
                 }
             } else {
-                //lPlayer.sendMessage("Interact with no block");
+                // no block
             }
-        } else if (event.getAction().equals(Action.RIGHT_CLICK_AIR) && lPlayer.getVehicle() != null && lPlayer.getVehicle() instanceof Boat) {
-            //lPlayer.sendMessage("Interact with air");
-            Boat lBoat = (Boat)lPlayer.getVehicle();
-            WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
-            Location lLocation = lPlayer.getLocation();
-            Block lBlock = lPlayer.getTargetBlock(null, 20);
-            if ((lBlock != null) && (lBlock.getY() > (lPlayer.getLocation().getBlockY() + 2))) { // schlag in die luft
-                if (plugin.isBoatTraveling(lBoat)) {
-                    plugin.deactivateBoatMovement(lBoat);
-                } else {
-                    //lPlayer.sendMessage("block at " + lBlock.toString());
-                    Vector lVector = new Vector(lBlock.getX() - lLocation.getBlockX(), lBlock.getY() - lLocation.getBlockY(), lBlock.getZ() - lLocation.getBlockZ());
-                    //lPlayer.sendMessage(lVector.toString());
-                    ArrayList<WaterPathItem> lBuoys = lDB.getItemNearlyDirection(lLocation, 60, lVector, 0.0f, 0.7f);
-                    //lPlayer.sendMessage("count:" + new Integer(lBuoys.size()).toString());
-                    if (lBuoys.size() > 0) {
-                        for(WaterPathItem lItem : lBuoys) {
-                            lPlayer.sendMessage("Lets travel... ");
-                            plugin.startBuoyDriver(lBoat, lItem, BoatDriver.Side.Red);
-                            /*
-                            lPlayer.sendMessage("Lets travel... " + lItem.toString());
-                            Entity lVehicle = lPlayer.getVehicle();
-                            if (lVehicle == null) {
-                                lVehicle = lPlayer;
-                            }
-                            Location lPlayerLoc = lVehicle.getLocation();
-                            Location lLoc = lItem.mid_position.getLocation(lWorld);
-                            Vector lVec = new Vector(lLoc.getX() - lPlayerLoc.getX(), lLoc.getY() - lPlayerLoc.getY(), lLoc.getZ() - lPlayerLoc.getZ());
-                            double lLength = lVec.length();
-                            lVec.multiply(1 / lLength);
-                            //lPlayer.sendMessage("v = " + lVec.toString() + " l = " + lVec.length());
-                            lVehicle.setVelocity(lVec);
-                            //lLoc.setY(lPlayer.getLocation().getY());
-                            //lLoc.setPitch(lPlayer.getLocation().getPitch());
-                            //lLoc.setYaw(lPlayer.getLocation().getYaw());
-                            //lPlayer.teleport(lLoc);
-                            * 
-                            */
-                            break;
-                        }
+        } else if (event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
+            if (lPlayer.getVehicle() != null && lPlayer.getVehicle() instanceof Boat) {
+                //
+                // travel
+                //
+                Boat lBoat = (Boat)lPlayer.getVehicle();
+                WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
+                Location lLocation = lPlayer.getLocation();
+                Block lBlock = lPlayer.getTargetBlock(null, 20);
+                if ((lBlock != null) && (lBlock.getY() > (lPlayer.getLocation().getBlockY() + 2))) { // schlag in die luft
+                    if (plugin.isBoatTraveling(lBoat)) {
+                        plugin.deactivateBoatMovement(lBoat);
                     } else {
-                        lPlayer.sendMessage("No buoy found in this direction!");
+                        Vector lVector = new Vector(lBlock.getX() - lLocation.getBlockX(), lBlock.getY() - lLocation.getBlockY(), lBlock.getZ() - lLocation.getBlockZ());
+                        ArrayList<WaterPathItem> lBuoys = lDB.getItemNearlyDirection(lLocation, 60, lVector, 0.0f, 0.7f);
+                        if (lBuoys.size() > 0) {
+                            for(WaterPathItem lItem : lBuoys) {
+                                lPlayer.sendMessage("Lets travel... ");
+                                plugin.startBuoyDriver(lBoat, lItem, lVector);
+                                break;
+                            }
+                        } else {
+                            lPlayer.sendMessage("No buoy found in this direction!");
+                        }
+                    }
+                }
+            } else {
+                //
+                // set destination
+                //
+                Location lLoc = lPlayer.getLocation().add(0, -1, 0);
+                Block lBlock = lLoc.getBlock(); // block on which we stand
+                if (lBlock != null) {
+                    if (lBlock.getType().equals(Material.WOOL)) {
+                        int lColor = lBlock.getData();
+                        if ((lColor == 14) || (lColor == 13)) { // red or green
+                            Block lTargetBlock = lPlayer.getTargetBlock(null, 20);
+                            if ((lTargetBlock != null) && (lTargetBlock.getY() > (lPlayer.getLocation().getBlockY() + 2))) { // schlag in die luft
+                                WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
+                                WaterPathItem lBuoy = lDB.getItemAt(lLoc);
+                                if (lBuoy != null) {
+                                    Vector lVector = new Vector(lTargetBlock.getX() - lLoc.getBlockX(), lTargetBlock.getY() - lLoc.getBlockY(), lTargetBlock.getZ() - lLoc.getBlockZ());
+                                    ArrayList<WaterPathItem> lBuoys = lDB.getItemNearlyDirection(lLoc, 80, lVector, 0.0f, 0.7f);
+                                    if (lBuoys.size() > 0) {
+                                        for(WaterPathItem lItem : lBuoys) {
+                                            lPlayer.sendMessage("Next buoy as destination marked.");
+                                            if (lColor == 14) { // red
+                                                if (!lBuoy.red_links.contains(lItem.key)) lBuoy.red_links.add(lItem.key);
+                                            } else { // green
+                                                if (!lBuoy.green_links.contains(lItem.key)) lBuoy.green_links.add(lItem.key);
+                                            }
+                                            break;
+                                        }
+                                    } else {
+                                        lPlayer.sendMessage("No buoy found in this direction!");
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

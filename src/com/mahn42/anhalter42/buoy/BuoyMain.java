@@ -50,6 +50,7 @@ public class BuoyMain extends JavaPlugin {
     @Override
     public void onDisable() { 
         if (fWaterPathDBs != null) {
+            getLogger().info("Saving DBs...");
             for(WaterPathDB lDB : fWaterPathDBs.values()) {
                 lDB.save();
             }
@@ -92,8 +93,8 @@ public class BuoyMain extends JavaPlugin {
         }
     }
     
-    public void startBuoyDriver(Boat aBoat, WaterPathItem aItem, BoatDriver.Side aSide) {
-        BoatDriver lDriver = new BoatDriver(this, aBoat, aItem, aSide);
+    public void startBuoyDriver(Boat aBoat, WaterPathItem aItem, Vector aBeatVector) {
+        BoatDriver lDriver = new BoatDriver(this, aBoat, aItem, aBeatVector);
         int lTaskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, lDriver, 1, 10);
         lDriver.setTaskId(lTaskId);
         getLogger().info("boat activated. " + new Integer(lDriver.getTaskId()).toString());

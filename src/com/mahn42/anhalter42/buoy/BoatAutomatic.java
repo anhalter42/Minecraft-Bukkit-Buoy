@@ -6,7 +6,6 @@ package com.mahn42.anhalter42.buoy;
 
 import java.util.HashMap;
 import org.bukkit.entity.Boat;
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 /**

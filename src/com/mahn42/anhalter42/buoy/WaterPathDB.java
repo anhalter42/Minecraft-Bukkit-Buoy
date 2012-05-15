@@ -8,7 +8,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
@@ -18,7 +17,7 @@ import org.bukkit.util.Vector;
  */
 public class WaterPathDB extends DBSet<WaterPathItem> {
     protected World fWorld;
-    protected double fMaxLinkDistance = 4000.0f;
+    protected double fMaxLinkDistance = 8000.0f;
     
     public WaterPathDB(World aWorld, File aFile) {
         super(WaterPathItem.class, aFile);
@@ -140,11 +139,11 @@ public class WaterPathDB extends DBSet<WaterPathItem> {
         for(WaterPathItem lItem : this) {
             if (lItem != aItem) {
                 double lDistance = aItem.distanceSquared(lItem);
-                Logger.getLogger("updateLinks").info("" + lDistance);
+                //Logger.getLogger("updateLinks").info("" + lDistance);
                 if (lDistance < fMaxLinkDistance) {
                     boolean lRedWaterline = true;
                     boolean lFirst = true;
-                    Logger.getLogger("updateLinks").info(lItem.toString());
+                    //Logger.getLogger("updateLinks").info(lItem.toString());
                     for(BlockPosition lPos : new WorldLineWalk(aItem.way_red_position, lItem.way_red_position)) {
                         //Logger.getLogger("updateLinks").info(lPos.toString());
                         if (lFirst) lFirst = false; else {
@@ -160,7 +159,7 @@ public class WaterPathDB extends DBSet<WaterPathItem> {
                     if (lRedWaterline) {
                         if (!aItem.red_links.contains(lItem.key)) aItem.red_links.add(lItem.key);
                         if (!lItem.red_links.contains(aItem.key)) lItem.red_links.add(aItem.key);
-                        Logger.getLogger("updateLinks").info("red " + lItem.key);
+                        //Logger.getLogger("updateLinks").info("red " + lItem.key);
                     }
                     boolean lGreenWaterline = true;
                     lFirst = true;
@@ -178,7 +177,7 @@ public class WaterPathDB extends DBSet<WaterPathItem> {
                     if (lGreenWaterline) {
                         if (!aItem.green_links.contains(lItem.key)) aItem.green_links.add(lItem.key);
                         if (!lItem.green_links.contains(aItem.key)) lItem.green_links.add(aItem.key);
-                        Logger.getLogger("updateLinks").info("green " + lItem.key);
+                        //Logger.getLogger("updateLinks").info("green " + lItem.key);
                     }
                 }
             }

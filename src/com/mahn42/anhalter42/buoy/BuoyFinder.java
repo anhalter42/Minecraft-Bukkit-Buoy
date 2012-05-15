@@ -5,7 +5,6 @@
 package com.mahn42.anhalter42.buoy;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.World;
