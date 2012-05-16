@@ -61,3 +61,4 @@ G---->G---->G
 Trivia
 ------
 
+Wird die rote oder grüne Wolle entfernt, so wird auch die Definition Boje zerstört. 
