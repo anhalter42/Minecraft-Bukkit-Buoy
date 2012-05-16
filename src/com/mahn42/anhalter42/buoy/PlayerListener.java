@@ -106,6 +106,7 @@ public class PlayerListener implements Listener {
                 if ((lBlock != null) && (lBlock.getY() > (lPlayer.getLocation().getBlockY() + 2))) { // schlag in die luft
                     if (plugin.isBoatTraveling(lBoat)) {
                         plugin.deactivateBoatMovement(lBoat);
+                        lPlayer.sendMessage("Travel stopped!");
                     } else {
                         Vector lVector = new Vector(lBlock.getX() - lLocation.getBlockX(), lBlock.getY() - lLocation.getBlockY(), lBlock.getZ() - lLocation.getBlockZ());
                         ArrayList<WaterPathItem> lBuoys = lDB.getItemNearlyDirection(lLocation, 60, lVector, 0.0f, 0.7f);
@@ -136,7 +137,7 @@ public class PlayerListener implements Listener {
                                 WaterPathItem lBuoy = lDB.getItemAt(lLoc);
                                 if (lBuoy != null) {
                                     Vector lVector = new Vector(lTargetBlock.getX() - lLoc.getBlockX(), lTargetBlock.getY() - lLoc.getBlockY(), lTargetBlock.getZ() - lLoc.getBlockZ());
-                                    ArrayList<WaterPathItem> lBuoys = lDB.getItemNearlyDirection(lLoc, 80, lVector, 0.0f, 0.7f);
+                                    ArrayList<WaterPathItem> lBuoys = lDB.getItemNearlyDirection(lLoc, 80, lVector, 0.0f, 0.3f);
                                     if (lBuoys.size() > 0) {
                                         for(WaterPathItem lItem : lBuoys) {
                                             lPlayer.sendMessage("Next buoy as destination marked.");

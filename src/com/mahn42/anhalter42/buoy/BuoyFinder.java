@@ -64,10 +64,10 @@ public class BuoyFinder implements Runnable {
                         lDB.addRecord(lItem);
                         player.sendMessage("Buoy activated.");
                         player.playEffect(lLoc, Effect.CLICK2, (byte)0);
-                        updateLinks(lDB, lItem);
+                        //updateLinks(lDB, lItem);
                     } else {
                         player.sendMessage("Buoy is already active.");
-                        updateLinks(lDB, lItem);
+                        //updateLinks(lDB, lItem);
                     }
                     lDB.save(); // TODO save it later (perhaps every minute)
                     break;

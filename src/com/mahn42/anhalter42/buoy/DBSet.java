@@ -98,8 +98,8 @@ public class DBSet<T extends DBRecord> implements Iterable<T> {
     }
     
     public void remove(T aRecord) {
-        fRecords.remove(aRecord);
-        fKeyIndex.remove(aRecord.key);
+        if (fRecords.remove(aRecord)) Logger.getLogger("DBSet").info("fRecords");
+        if (fKeyIndex.remove(aRecord.key) != null) Logger.getLogger("DBSet").info("fKeyIndex");
         removedRecord(aRecord);
     }
     
