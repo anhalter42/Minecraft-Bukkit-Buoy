@@ -32,27 +32,32 @@ entgegengesetzt Richtung der anderen grünen Boje.
 Entsprechend kann man auch zweigleisige Einbahnstraßen definieren. Dazu verbindet man rote und grüne Bojen
 immer in die gleiche Richtung.
 
+Wird nun auf eine Boje zu gefahren in dem man mit einer Schaufel in deren Richtung in die Luft haut und man in einem
+Boot sitzt, so wird mit der nächsten Bojen weitergemacht. Man kann stoppen, indem man das Boot verläßt,
+wobei das Boot dann weiter fährt, oder durch erneutes Schlagen in die Luft.
+Ist das Ende erreicht (es gibt keine weiterführende Verbindung) wird gestoppt.
+Erreicht man eine Gabelung wird ebenfalls gestoppt.
+
+Eine Gabelung kann definiert werden, in dem man für eine Boje mehrere Zielbojen definiert.
+
 Schaubild
 ---------
 
 
 Hin- und Rückrichtung
+
 R---->R---->R
 
 G<----G<----G
 
 
 Einbahnstraße
+
 R---->R---->R
 
 G---->G---->G
 
 
-Gabelung
-       R  G
-      /  /
-R---->R---->R
-       /
-      /
-G---->G---->G
+Trivia
+------
 
