@@ -76,7 +76,7 @@ public class WaterPathItem extends DBRecord {
     
     @Override
     public String toString() {
-        return red_position.toString() + "-" + green_position.toString();
+        return red_position.toString() + "[" + new Integer(red_links.size()) + "]" + "-" + green_position.toString() + "[" + new Integer(green_links.size()) + "]";
     }
     
     @Override

@@ -140,7 +140,7 @@ public class PlayerListener implements Listener {
                                     ArrayList<WaterPathItem> lBuoys = lDB.getItemNearlyDirection(lLoc, 80, lVector, 0.0f, 0.3f);
                                     if (lBuoys.size() > 0) {
                                         for(WaterPathItem lItem : lBuoys) {
-                                            lPlayer.sendMessage("Next buoy as destination marked.");
+                                            lPlayer.sendMessage("Next buoy marked as destination.");
                                             if (lColor == 14) { // red
                                                 if (!lBuoy.red_links.contains(lItem.key)) lBuoy.red_links.add(lItem.key);
                                             } else { // green

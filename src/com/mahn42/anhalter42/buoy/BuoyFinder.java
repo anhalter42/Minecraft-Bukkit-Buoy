@@ -38,45 +38,47 @@ public class BuoyFinder implements Runnable {
         } else {
             aColor = 14;
         }
-        Block[] lBlocks = findNearestBuoy(lWorld, lLoc, 60, null, aColor);
-        //Logger.getLogger("buoy").info("found " + new Integer(lBlocks.length).toString());
-        if (lBlocks.length > 0) {
-            for(Block lBlock : lBlocks) {
-                Location lLoc2;
-                if (aColor == 14) {
-                    lLoc2 = lLoc;
-                    lLoc = lBlock.getLocation();
-                } else {
-                    lLoc2 = lBlock.getLocation();
-                }
-                boolean lWaterLine = true;
-                for(BlockPosition lPos : new WorldLineWalk(lLoc, lLoc2)) {
-                    int lId = lPos.getBlockTypeId(lWorld);
-                    if (!((lId == 8) || (lId == 9) || (lId == 35))) {
-                        lWaterLine = false;
-                        break;
-                    }
-                }
-                if (lWaterLine) {
-                    WaterPathItem lItem = lDB.getItemAt(lLoc);
-                    if (lItem == null) {
-                        lItem = new WaterPathItem(lLoc, lLoc2);
-                        lDB.addRecord(lItem);
-                        player.sendMessage("Buoy activated.");
-                        player.playEffect(lLoc, Effect.CLICK2, (byte)0);
-                        //updateLinks(lDB, lItem);
-                    } else {
-                        player.sendMessage("Buoy is already active.");
-                        //updateLinks(lDB, lItem);
-                    }
-                    lDB.save(); // TODO save it later (perhaps every minute)
-                    break;
-                } else {
-                    player.sendMessage("Buoys must have a direct link with water only!");
-                }
-            }
+        if (lDB.getItemAt(lLoc) != null) {
+            player.sendMessage("Buoy is already active.");
         } else {
-            player.sendMessage("No corresponding buoy found. You need red and green buoy.");
+            Block[] lBlocks = findNearestBuoy(lWorld, lLoc, 60, null, aColor);
+            //Logger.getLogger("buoy").info("found " + new Integer(lBlocks.length).toString());
+            if (lBlocks.length > 0) {
+                for(Block lBlock : lBlocks) {
+                    Location lLoc2 = lBlock.getLocation();
+                    if (lDB.getItemAt(lLoc2) != null) {
+                        player.sendMessage("Corresponding buoy is already bundled.");
+                    } else {
+                        boolean lWaterLine = true;
+                        for(BlockPosition lPos : new WorldLineWalk(lLoc, lLoc2)) {
+                            int lId = lPos.getBlockTypeId(lWorld);
+                            if (!((lId == 8) || (lId == 9) || (lId == 35))) {
+                                lWaterLine = false;
+                                break;
+                            }
+                        }
+                        if (lWaterLine) {
+                            WaterPathItem lItem = lDB.getItemAt(lLoc2);
+                            if (lItem == null) {
+                                if (aColor == 14) {
+                                lItem = new WaterPathItem(lLoc, lLoc2);
+                                } else {
+                                lItem = new WaterPathItem(lLoc2, lLoc);
+                                }
+                                lDB.addRecord(lItem);
+                                player.sendMessage("Buoy activated.");
+                                player.playEffect(lLoc, Effect.CLICK2, (byte)0);
+                            }
+                            lDB.save(); // TODO save it later (perhaps every minute)
+                            break;
+                        } else {
+                            player.sendMessage("Buoys must have a direct link with water only!");
+                        }
+                    }
+                }
+            } else {
+                player.sendMessage("No corresponding buoy found. You need red and green buoy.");
+            }
         }
         //Logger.getLogger("buoy").info("end");
     }

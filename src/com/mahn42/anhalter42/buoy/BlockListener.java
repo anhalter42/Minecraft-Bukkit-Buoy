@@ -30,9 +30,10 @@ public class BlockListener implements Listener {
             if (lColor == 13 || lColor == 14) { // green or red
                 WaterPathDB lDB = plugin.getWaterPathDB(lBlock.getWorld().getName());
                 WaterPathItem lBuoy = lDB.getItemAt(lBlock.getLocation());
-                if (lBuoy != null) {
+                while (lBuoy != null) {
                     lDB.remove(lBuoy);
                     aEvent.getPlayer().sendMessage("Buoy is destroyed.");
+                    lBuoy = lDB.getItemAt(lBlock.getLocation());
                 }
             }
         }

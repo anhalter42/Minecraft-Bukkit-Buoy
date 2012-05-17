@@ -71,10 +71,14 @@ public class BoatDriver implements Runnable {
             plugin.setBoatVelocity(fBoat, lVec);
         } else {
             //TODO search next buoy if one set as next if none deactivate
-            if (fLastItem != null && fSide == Side.Red && fDestination.red_links.size() <= 1) {
+            if (fLastItem != null && fSide == Side.Red &&
+                    ((fDestination.red_links.isEmpty())
+                    || (fDestination.red_links.size() == 1 && fDestination.red_links.contains(fLastItem.key)) )) {
                 sendPlayer("No more destinations.");
                 deactivate();
-            } else if (fLastItem != null && fSide == Side.Green && fDestination.green_links.size() <= 1) {
+            } else if (fLastItem != null && fSide == Side.Green &&
+                    ((fDestination.green_links.isEmpty())
+                    || (fDestination.green_links.size() == 1 && fDestination.green_links.contains(fLastItem.key)) )) {
                 sendPlayer("No more destinations.");
                 deactivate();
             } else {
