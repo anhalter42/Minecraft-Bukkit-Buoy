@@ -32,7 +32,7 @@ entgegengesetzt Richtung der anderen grünen Boje.
 Entsprechend kann man auch zweigleisige Einbahnstraßen definieren. Dazu verbindet man rote und grüne Bojen
 immer in die gleiche Richtung.
 
-Wird nun auf eine Boje zu gefahren in dem man mit einer Schaufel in deren Richtung in die Luft haut und man in einem
+Wird nun auf eine Boje zu gefahren in dem man mit einer Schaufel in deren Richtung in die Luft haut (Rechtsclick) und man in einem
 Boot sitzt, so wird mit der nächsten Bojen weitergemacht. Man kann stoppen, indem man das Boot verläßt,
 wobei das Boot dann weiter fährt, oder durch erneutes Schlagen in die Luft.
 Ist das Ende erreicht (es gibt keine weiterführende Verbindung) wird gestoppt.
@@ -57,6 +57,12 @@ R---->R---->R
 
 G---->G---->G
 
+
+Korrekturen
+-----------
+
+Zieldefinitionen der Bojen können gelöscht werden. Dazu geht man in den Schleichenmodus (Sneak, Umschalttaste)
+und schlägt (Rechtsclick) auf den Wolleblock. 
 
 Trivia
 ------
