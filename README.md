@@ -64,6 +64,12 @@ Korrekturen
 Zieldefinitionen der Bojen können gelöscht werden. Dazu geht man in den Schleichenmodus (Sneak, Umschalttaste)
 und schlägt (Rechtsclick) auf den Wolleblock. 
 
+Kommandos
+---------
+
+* buoy_list   listet alle Bojenpaare der aktuellen Welt auf
+* buoy_remove entfernt die Definition der Bojenpaare der aktuellen Welt des Spielers
+
 Trivia
 ------
 
