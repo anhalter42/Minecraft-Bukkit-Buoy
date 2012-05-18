@@ -30,6 +30,7 @@ public class CommandListBuoys implements CommandExecutor {
           for(WaterPathItem lItem : lDB) {
               lPlayer.sendMessage(lItem.toString() + " " + lItem.player);
           }
+          lDB.save();
         }
         return true;
     }

@@ -138,10 +138,22 @@ public class WaterPathItem extends DBRecord {
                     (red_position.y + mid_position.y) / 2,
                     (red_position.z + mid_position.z) / 2
                 );
+        //little bit more to the middle
+        way_red_position = new BlockPosition(
+                    (way_red_position.x + mid_position.x) / 2,
+                    (way_red_position.y + mid_position.y) / 2,
+                    (way_red_position.z + mid_position.z) / 2
+                );
         way_green_position = new BlockPosition(
                     (green_position.x + mid_position.x) / 2,
                     (green_position.y + mid_position.y) / 2,
                     (green_position.z + mid_position.z) / 2
+                );
+        //little bit more to the middle
+        way_green_position = new BlockPosition(
+                    (way_green_position.x + mid_position.x) / 2,
+                    (way_green_position.y + mid_position.y) / 2,
+                    (way_green_position.z + mid_position.z) / 2
                 );
     }
     
