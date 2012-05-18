@@ -61,10 +61,11 @@ public class BuoyFinder implements Runnable {
                             WaterPathItem lItem = lDB.getItemAt(lLoc2);
                             if (lItem == null) {
                                 if (aColor == 14) {
-                                lItem = new WaterPathItem(lLoc, lLoc2);
+                                    lItem = new WaterPathItem(lLoc, lLoc2);
                                 } else {
-                                lItem = new WaterPathItem(lLoc2, lLoc);
+                                    lItem = new WaterPathItem(lLoc2, lLoc);
                                 }
+                                lItem.player = player.getName();
                                 lDB.addRecord(lItem);
                                 player.sendMessage("Buoy activated.");
                                 player.playEffect(lLoc, Effect.CLICK2, (byte)0);
@@ -83,9 +84,34 @@ public class BuoyFinder implements Runnable {
         //Logger.getLogger("buoy").info("end");
     }
     
+    protected class BlockDistance implements Comparable<BlockDistance> {
+        Block item;
+        double distance;
+        
+        BlockDistance(Block aItem, double aDistance) {
+            item = aItem;
+            distance = aDistance;
+        }
+
+        @Override
+        public int compareTo(BlockDistance aObject) {
+            if (aObject instanceof BlockDistance) {
+                if (((BlockDistance)aObject).distance < distance) {
+                    return +1;
+                } else if (((BlockDistance)aObject).distance == distance) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            } else {
+                return 0;
+            }
+        }
+    }
+    
     // 1 3  2 5  3 7  4 9
     protected Block[] findNearestBuoy(World aWorld, Location aStart, int aMaxRadius, Location[] aExcludeLocations, byte aColor) {
-        ArrayList lList = new ArrayList();
+        ArrayList<BlockDistance> lList = new ArrayList<BlockDistance>();
         Location lLoc = aStart;
         World lWorld = aWorld;
         int maxlen = 1 + (aMaxRadius * 2);
@@ -116,7 +142,8 @@ public class BuoyFinder implements Runnable {
                         Block lBlock = lWorld.getBlockAt(x, y, z);
                         if ((lBlock.getData() == aColor)
                             && (lWorld.getBlockTypeIdAt(x, y - 1, z) == 9)) { // color 14 red 
-                            lList.add(lBlock);
+                            BlockDistance lBD = new BlockDistance(lBlock, aStart.distance(lBlock.getLocation()));
+                            lList.add(lBD);
                         }
                     }
                 }
@@ -141,11 +168,11 @@ public class BuoyFinder implements Runnable {
                 x--; z--; len+=2;
             }
         }
+        java.util.Collections.sort(lList);
         Block[] lBlocks = new Block[lList.size()];
         int lIndex = 0;
-        for(Object lObject : lList) {
-            Block lBlock = (Block) lObject;
-            lBlocks[lIndex] = lBlock;
+        for(BlockDistance lBD : lList) {
+            lBlocks[lIndex] = lBD.item;
             lIndex++;
         }
         return lBlocks;

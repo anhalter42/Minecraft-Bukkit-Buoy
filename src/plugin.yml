@@ -1,18 +1,27 @@
 ## YAML Template.
 name: Buoy
 main: com.mahn42.anhalter42.buoy.BuoyMain
-version: 0.1
+version: 0.2
 commands:
    buoy_list:
       description: List all buoys in the current world.
       usage: /buoy_list
       permission: buoy.list
       permission-message: You don't have permission
+   buoy_remove:
+      description: remove all buoys from you in the current world.
+      usage: /buoy_remove [playername]
+      permission: buoy.remove
+      permission-message: You don't have permission
 permissions:
     buoy.*:
         description: Gives access to all buoy commands
         children:
             buoy.list: true
+            buoy.remove: true
     buoy.list:
         description: Allows you to list all buoys in the current world
         default: true
+    buoy.remove:
+        description: Allows you to remove all buoys of a player in the current world
+        default: false

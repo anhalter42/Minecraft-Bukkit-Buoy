@@ -21,6 +21,7 @@ public class WaterPathItem extends DBRecord {
     public BlockPosition way_red_position;
     public ArrayList<String> red_links;
     public ArrayList<String> green_links;
+    public String player;
     
     @Override
     protected void init() {
@@ -32,6 +33,7 @@ public class WaterPathItem extends DBRecord {
         if (way_red_position == null) way_red_position = new BlockPosition();
         if (red_links == null) red_links = new ArrayList<String>();
         if (green_links == null) green_links = new ArrayList<String>();
+        if (player == null) player = "";
     }
     
     public WaterPathItem() {
@@ -99,6 +101,7 @@ public class WaterPathItem extends DBRecord {
         aCols.add(way_green_position.z);
         aCols.add(arrayToKeys(red_links));
         aCols.add(arrayToKeys(green_links));
+        aCols.add(player);
     }
     
     @Override
@@ -121,6 +124,7 @@ public class WaterPathItem extends DBRecord {
         way_green_position.z = aCols.popInt();
         aCols.popKeys(red_links);
         aCols.popKeys(green_links);
+        player = aCols.pop();
     }
     
     public void calcPositions() {

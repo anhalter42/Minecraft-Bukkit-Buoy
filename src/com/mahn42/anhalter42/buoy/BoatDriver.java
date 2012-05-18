@@ -41,6 +41,7 @@ public class BoatDriver implements Runnable {
     @Override
     public void run() {
         Location lBoatLoc = fBoat.getLocation();
+        World lWorld = fBoat.getWorld();
         if (fStart) {
             //TODO decide the side
             Vector lPos = fBoat.getLocation().toVector();
@@ -55,9 +56,9 @@ public class BoatDriver implements Runnable {
         }
         Location lLoc;
         if (fSide == Side.Red) {
-            lLoc = fDestination.way_red_position.getLocation(fBoat.getWorld());
+            lLoc = fDestination.way_red_position.getLocation(lWorld);
         } else {
-            lLoc = fDestination.way_green_position.getLocation(fBoat.getWorld());
+            lLoc = fDestination.way_green_position.getLocation(lWorld);
         }
         lLoc.add(0.0f, 1.0f, 0.0f);
         double lDistance = lBoatLoc.distance(lLoc);
@@ -83,7 +84,6 @@ public class BoatDriver implements Runnable {
                 deactivate();
             } else {
                 WaterPathItem lNextDestination = null;
-                World lWorld = fBoat.getWorld();
                 WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
                 if (fLastItem != null) {
                     if (fSide == Side.Red) {
