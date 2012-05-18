@@ -70,6 +70,13 @@ Kommandos
 * buoy_list   listet alle Bojenpaare der aktuellen Welt auf
 * buoy_remove entfernt die Definition der Bojenpaare der aktuellen Welt des Spielers
 
+Geplantes
+---------
+
+Ist eine Fackel auf der Boje, so wird die Geschwindigkeit erhöht.
+Mit Redstone Fackeln sollen Gabelungen geschalten werden können.
+Unterstütztung von Dynmap um die Wege zu visualisieren zu können.
+
 Trivia
 ------
 
