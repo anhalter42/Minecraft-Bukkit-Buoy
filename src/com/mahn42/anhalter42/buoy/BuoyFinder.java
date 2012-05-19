@@ -38,7 +38,9 @@ public class BuoyFinder implements Runnable {
         } else {
             aColor = 14;
         }
-        if (lDB.getItemAt(lLoc) != null) {
+        WaterPathItem lItem = lDB.getItemAt(lLoc);
+        if (lItem != null) {
+            lItem.calcPositions();
             player.sendMessage("Buoy is already active.");
         } else {
             Block[] lBlocks = findNearestBuoy(lWorld, lLoc, 60, null, aColor);
@@ -46,7 +48,8 @@ public class BuoyFinder implements Runnable {
             if (lBlocks.length > 0) {
                 for(Block lBlock : lBlocks) {
                     Location lLoc2 = lBlock.getLocation();
-                    if (lDB.getItemAt(lLoc2) != null) {
+                    lItem = lDB.getItemAt(lLoc2);
+                    if (lItem != null) {
                         player.sendMessage("Corresponding buoy is already bundled.");
                     } else {
                         boolean lWaterLine = true;
@@ -58,18 +61,15 @@ public class BuoyFinder implements Runnable {
                             }
                         }
                         if (lWaterLine) {
-                            WaterPathItem lItem = lDB.getItemAt(lLoc2);
-                            if (lItem == null) {
-                                if (aColor == 14) {
-                                    lItem = new WaterPathItem(lLoc, lLoc2);
-                                } else {
-                                    lItem = new WaterPathItem(lLoc2, lLoc);
-                                }
-                                lItem.player = player.getName();
-                                lDB.addRecord(lItem);
-                                player.sendMessage("Buoy activated.");
-                                player.playEffect(lLoc, Effect.CLICK2, (byte)0);
+                            if (aColor == 14) {
+                                lItem = new WaterPathItem(lLoc, lLoc2);
+                            } else {
+                                lItem = new WaterPathItem(lLoc2, lLoc);
                             }
+                            lItem.player = player.getName();
+                            lDB.addRecord(lItem);
+                            player.sendMessage("Buoy activated.");
+                            player.playEffect(lLoc, Effect.CLICK2, (byte)0);
                             lDB.save(); // TODO save it later (perhaps every minute)
                             break;
                         } else {
