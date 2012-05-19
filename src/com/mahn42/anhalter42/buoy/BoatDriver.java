@@ -5,6 +5,7 @@
 package com.mahn42.anhalter42.buoy;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Entity;
@@ -55,10 +56,17 @@ public class BoatDriver implements Runnable {
             fStart = false;
         }
         Location lLoc;
+        double fSpeedFactor = 1.0f;
         if (fSide == Side.Red) {
             lLoc = fDestination.way_red_position.getLocation(lWorld);
+            if (fDestination.red_position.getLocation(lWorld).add(0,1,0).getBlock().getType().equals(Material.TORCH)) {
+                fSpeedFactor = 1.5f;
+            }
         } else {
             lLoc = fDestination.way_green_position.getLocation(lWorld);
+            if (fDestination.green_position.getLocation(lWorld).add(0,1,0).getBlock().getType().equals(Material.TORCH)) {
+                fSpeedFactor = 1.5f;
+            }
         }
         lLoc.add(0.0f, 1.0f, 0.0f);
         double lDistance = lBoatLoc.distance(lLoc);
@@ -68,7 +76,7 @@ public class BoatDriver implements Runnable {
             if (lDistance < 4.0f) {
                 lFactor = lFactor / (5.0f - lDistance);
             }
-            lVec.multiply(lFactor);
+            lVec.multiply(lFactor * fSpeedFactor);
             plugin.setBoatVelocity(fBoat, lVec);
         } else {
             //TODO search next buoy if one set as next if none deactivate
