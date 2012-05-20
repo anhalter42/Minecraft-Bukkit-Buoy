@@ -6,6 +6,7 @@ package com.mahn42.anhalter42.buoy;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
 /**
@@ -75,5 +76,9 @@ public class BlockPosition {
     
     public Vector getVector() {
         return new Vector(x,y,z);
+    }
+
+    public Block getBlock(World aWorld) {
+        return aWorld.getBlockAt(x, y, z);
     }
 }

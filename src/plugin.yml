@@ -13,15 +13,25 @@ commands:
       usage: /buoy_remove [playername]
       permission: buoy.remove
       permission-message: You don't have permission
+   buoy_debug:
+      description: debug all buoys.
+      usage: /buoy_debug [options]
+      permission: buoy.debug
+      permission-message: You don't have permission
 permissions:
     buoy.*:
         description: Gives access to all buoy commands
         children:
             buoy.list: true
             buoy.remove: true
+            buoy.debug: true
     buoy.list:
         description: Allows you to list all buoys in the current world
         default: true
     buoy.remove:
         description: Allows you to remove all buoys of a player in the current world
         default: false
+    buoy.debug:
+        description: Allows you to debug
+        default: false
+        

@@ -44,6 +44,8 @@ public class BuoyMain extends JavaPlugin {
         fBoatDrivers = new HashMap<Boat, BoatDriver>();
         getCommand("buoy_list").setExecutor(new CommandListBuoys(this));
         getCommand("buoy_remove").setExecutor(new CommandRemoveBuoys(this));
+        getCommand("buoy_debug").setExecutor(new CommandDebugBuoys(this));
+        
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(new BlockListener(this), this);
         getServer().getScheduler().scheduleSyncRepeatingTask(this, fBoatAutomatic, 10, 10);
