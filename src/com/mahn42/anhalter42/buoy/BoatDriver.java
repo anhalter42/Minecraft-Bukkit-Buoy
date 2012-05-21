@@ -113,7 +113,7 @@ public class BoatDriver implements Runnable {
                             sendPlayer("To many destinations.");
                             deactivate(); // to many destinations
                         } else {
-                            for(String lKey : fDestination.red_links) {
+                            for(String lKey : fDestination.green_links) {
                                 if (!lKey.equals(fLastItem.key)) {
                                     lNextDestination = lDB.getRecord(lKey);
                                     break;
@@ -158,6 +158,9 @@ public class BoatDriver implements Runnable {
                 if (lNextDestination != null) {
                     fLastItem = fDestination;
                     fDestination = lNextDestination;
+                } else {
+                    sendPlayer("No next destination.");
+                    deactivate(); // to many destinations
                 }
             }
         }

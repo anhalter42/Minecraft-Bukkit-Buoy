@@ -1,0 +1,12 @@
+## YAML Template.
+---
+AirBeatY: 2
+MaxDistanceForTravel: 80
+MaxAngleForTravel: 45
+MaxDistanceSetDestination: 80
+MaxAngleSetDestination: 30
+TicksBoatDriver: 10
+TicksBoatAutomatic: 10
+MaxBuoyDistance: 60
+RedBouyColor: 14
+GreenBouyColor: 13

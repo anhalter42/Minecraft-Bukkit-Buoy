@@ -33,17 +33,17 @@ public class BuoyFinder implements Runnable {
         World lWorld = startBlock.getWorld();
         WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
         byte aColor;
-        if (startBlock.getData() == 14) {
-            aColor = 13;
+        if (startBlock.getData() == plugin.configRedBouyColor) {
+            aColor = plugin.configGreenBouyColor;
         } else {
-            aColor = 14;
+            aColor = plugin.configRedBouyColor;
         }
         WaterPathItem lItem = lDB.getItemAt(lLoc);
         if (lItem != null) {
             lItem.calcPositions();
             player.sendMessage("Buoy is already active.");
         } else {
-            Block[] lBlocks = findNearestBuoy(lWorld, lLoc, 60, null, aColor);
+            Block[] lBlocks = findNearestBuoy(lWorld, lLoc, plugin.configMaxBuoyDistance, null, aColor);
             //Logger.getLogger("buoy").info("found " + new Integer(lBlocks.length).toString());
             if (lBlocks.length > 0) {
                 for(Block lBlock : lBlocks) {
@@ -61,7 +61,7 @@ public class BuoyFinder implements Runnable {
                             }
                         }
                         if (lWaterLine) {
-                            if (aColor == 14) {
+                            if (aColor == plugin.configGreenBouyColor) {
                                 lItem = new WaterPathItem(lLoc, lLoc2);
                             } else {
                                 lItem = new WaterPathItem(lLoc2, lLoc);

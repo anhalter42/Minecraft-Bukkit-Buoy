@@ -81,4 +81,8 @@ public class BlockPosition {
     public Block getBlock(World aWorld) {
         return aWorld.getBlockAt(x, y, z);
     }
+
+    public Block getBlockAt(World aWorld, int aDx, int aDy, int aDz) {
+        return aWorld.getBlockAt(x + aDx, y + aDy, z + aDz);
+    }
 }
