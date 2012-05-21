@@ -50,8 +50,10 @@ public class BoatDriver implements Runnable {
             Vector lGreenVector = fDestination.green_position.getVector().subtract(lPos);
             if (lRedVector.angle(fStartVector) < lGreenVector.angle(fStartVector)) {
                 fSide = Side.Red;
+                sendPlayer("Lets travel the red way.");
             } else {
                 fSide = Side.Green;
+                sendPlayer("Lets travel the green way.");
             }
             fStart = false;
         }

@@ -116,7 +116,6 @@ public class PlayerListener implements Listener {
                             ArrayList<WaterPathItem> lBuoys = lDB.getItemNearlyDirection(lLocation, 60, lVector, 0.0f, 0.7f);
                             if (lBuoys.size() > 0) {
                                 for(WaterPathItem lItem : lBuoys) {
-                                    lPlayer.sendMessage("Lets travel... ");
                                     plugin.startBuoyDriver(lBoat, lItem, lVector);
                                     break;
                                 }
