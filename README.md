@@ -36,6 +36,7 @@ Wird nun auf eine Boje zu gefahren in dem man mit einer Schaufel in deren Richtu
 Boot sitzt, so wird mit der nächsten Bojen weitergemacht. Man kann stoppen, indem man das Boot verläßt,
 wobei das Boot dann weiter fährt, oder durch erneutes Schlagen in die Luft.
 Ist das Ende erreicht (es gibt keine weiterführende Verbindung) wird gestoppt.
+Ist eine Fackel auf der Boje, so wird die Geschwindigkeit erhöht.
 Erreicht man eine Gabelung wird ebenfalls gestoppt.
 
 Eine Gabelung kann definiert werden, in dem man für eine Boje mehrere Zielbojen definiert.
@@ -73,7 +74,6 @@ Kommandos
 Geplantes
 ---------
 
-Ist eine Fackel auf der Boje, so wird die Geschwindigkeit erhöht.
 Mit Redstone Fackeln sollen Gabelungen geschalten werden können.
 Unterstütztung von Dynmap um die Wege zu visualisieren zu können.
 
