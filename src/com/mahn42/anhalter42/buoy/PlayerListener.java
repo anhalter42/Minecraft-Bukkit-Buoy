@@ -34,7 +34,10 @@ public class PlayerListener implements Listener {
     public void playerInteract(PlayerInteractEvent event) {
         Player lPlayer = event.getPlayer();
         World lWorld = lPlayer.getWorld();
-        Material lInHand = event.getItem().getType();
+        Material lInHand = null;
+        if (event.hasItem()) {
+            lInHand = event.getItem().getType();
+        }
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (event.hasItem() && (
                        lInHand.equals(Material.STONE_SPADE)
@@ -150,15 +153,4 @@ public class PlayerListener implements Listener {
             }
         }
     }
-    
-        /*
-    @EventHandler
-    public void playerMove(PlayerMoveEvent aEvent) {
-        Player lPlayer = aEvent.getPlayer();
-        Vector lVel = lPlayer.getVelocity();
-        if (lVel.length() > 0.5f) {
-            lPlayer.sendMessage("Vel:" + lVel.toBlockVector().toString() + " l:" + lVel.length());
-        }
-    }
-        */
 }

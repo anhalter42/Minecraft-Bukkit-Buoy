@@ -28,7 +28,6 @@ public class BuoyFinder implements Runnable {
             
     @Override
     public void run() {
-        //Logger.getLogger("buoy").info("begin");
         Location lLoc = startBlock.getLocation();
         World lWorld = startBlock.getWorld();
         WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
@@ -44,7 +43,6 @@ public class BuoyFinder implements Runnable {
             player.sendMessage("Buoy is already active.");
         } else {
             Block[] lBlocks = findNearestBuoy(lWorld, lLoc, plugin.configMaxBuoyDistance, null, aColor);
-            //Logger.getLogger("buoy").info("found " + new Integer(lBlocks.length).toString());
             if (lBlocks.length > 0) {
                 for(Block lBlock : lBlocks) {
                     Location lLoc2 = lBlock.getLocation();
@@ -70,7 +68,6 @@ public class BuoyFinder implements Runnable {
                             lDB.addRecord(lItem);
                             player.sendMessage("Buoy activated.");
                             player.playEffect(lLoc, Effect.CLICK2, (byte)0);
-                            lDB.save(); // TODO save it later (perhaps every minute)
                             break;
                         } else {
                             player.sendMessage("Buoys must have a direct link with water only!");
@@ -81,7 +78,6 @@ public class BuoyFinder implements Runnable {
                 player.sendMessage("No corresponding buoy found. You need red and green buoy.");
             }
         }
-        //Logger.getLogger("buoy").info("end");
     }
     
     protected class BlockDistance implements Comparable<BlockDistance> {
@@ -109,7 +105,6 @@ public class BuoyFinder implements Runnable {
         }
     }
     
-    // 1 3  2 5  3 7  4 9
     protected Block[] findNearestBuoy(World aWorld, Location aStart, int aMaxRadius, Location[] aExcludeLocations, byte aColor) {
         ArrayList<BlockDistance> lList = new ArrayList<BlockDistance>();
         Location lLoc = aStart;

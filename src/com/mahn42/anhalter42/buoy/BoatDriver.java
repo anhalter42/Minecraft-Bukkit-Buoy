@@ -82,7 +82,6 @@ public class BoatDriver implements Runnable {
             lVec.multiply(lFactor * fSpeedFactor);
             plugin.setBoatVelocity(fBoat, lVec);
         } else {
-            //TODO search next buoy if one set as next if none deactivate
             if (fLastItem != null && fSide == Side.Red &&
                     ((fDestination.red_links.isEmpty())
                     || (fDestination.red_links.size() == 1 && fDestination.red_links.contains(fLastItem.key)) )) {
@@ -169,8 +168,7 @@ public class BoatDriver implements Runnable {
     
     protected void deactivate() {
         plugin.deactivateBoatMovement(fBoat);
-        //plugin.getServer().getScheduler().cancelTask(fTaskId);
-        plugin.getLogger().info("boat stopped.");
+        //plugin.getLogger().info("boat stopped.");
     }
 
     public void setTaskId(int aTaskId) {
