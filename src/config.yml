@@ -10,3 +10,4 @@ TicksBoatAutomatic: 10
 MaxBuoyDistance: 60
 RedBouyColor: 14
 GreenBouyColor: 13
+TicksDBSave: 18000

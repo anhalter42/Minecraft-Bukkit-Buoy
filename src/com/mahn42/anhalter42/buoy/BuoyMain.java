@@ -20,6 +20,19 @@ import org.bukkit.util.Vector;
  */
 public class BuoyMain extends JavaPlugin {
 
+    private static class DBSaver implements Runnable {
+
+        BuoyMain plugin;
+        public DBSaver(BuoyMain aPlugin) {
+            plugin = aPlugin;
+        }
+
+        @Override
+        public void run() {
+            plugin.saveDB();
+        }
+    }
+
     /*
 		colors.put("orange",1);
 		colors.put("white",0);
@@ -48,6 +61,7 @@ public class BuoyMain extends JavaPlugin {
     public int configMaxBuoyDistance = 60;
     public byte configRedBouyColor = 14;
     public byte configGreenBouyColor = 13;
+    public int configTicksDBSave = 100;
     
     protected HashMap<String, WaterPathDB> fWaterPathDBs;
     protected BoatAutomatic fBoatAutomatic;
@@ -57,13 +71,6 @@ public class BuoyMain extends JavaPlugin {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        File lFile = new File("/Users/andre/craftbukkit/plugins/Buoy/world_buoy.csv");
-        WaterPathDB lDB = new WaterPathDB(null, lFile);
-        lDB.load();
-        Logger.getLogger("xx").info("size = " + new Integer(lDB.size()));
-        WaterPathItem lItem = lDB.getRecord(3);
-        lDB.remove(lItem);
-        Logger.getLogger("xx").info("size = " + new Integer(lDB.size()));
     }
 
     @Override
@@ -78,10 +85,15 @@ public class BuoyMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(new BlockListener(this), this);
         getServer().getScheduler().scheduleSyncRepeatingTask(this, fBoatAutomatic, 10, configTicksBoatAutomatic);
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, new DBSaver(this), 10, configTicksDBSave);
     }
     
     @Override
     public void onDisable() { 
+        saveDB();
+    }
+    
+    public void saveDB() { 
         if (fWaterPathDBs != null) {
             getLogger().info("Saving DBs...");
             for(WaterPathDB lDB : fWaterPathDBs.values()) {
@@ -89,7 +101,7 @@ public class BuoyMain extends JavaPlugin {
             }
         }
     }
-    
+
     public WaterPathDB getWaterPathDB(String aWorldName) {
         if (fWaterPathDBs == null) {
             fWaterPathDBs = new HashMap<String, WaterPathDB>();
@@ -150,5 +162,6 @@ public class BuoyMain extends JavaPlugin {
         configMaxBuoyDistance = lConfig.getInt("MaxBuoyDistance");
         configRedBouyColor = (byte) lConfig.getInt("RedBouyColor");
         configGreenBouyColor = (byte) lConfig.getInt("GreenBouyColor");
+        configTicksDBSave = lConfig.getInt("TicksDBSave");
     }
 }

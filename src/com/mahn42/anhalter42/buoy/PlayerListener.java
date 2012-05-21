@@ -35,7 +35,6 @@ public class PlayerListener implements Listener {
         Player lPlayer = event.getPlayer();
         World lWorld = lPlayer.getWorld();
         Material lInHand = event.getItem().getType();
-        //TODO only with special item in hand
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (event.hasItem() && (
                        lInHand.equals(Material.STONE_SPADE)
