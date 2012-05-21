@@ -32,6 +32,7 @@ public class DBSet<T extends DBRecord> implements Iterable<T> {
     
     public void load() {
         fRecords.clear();
+        fKeyIndex.clear();
         if (fStore.exists()) {
             try {
                 BufferedReader lReader = new BufferedReader(new FileReader(fStore));
@@ -98,8 +99,10 @@ public class DBSet<T extends DBRecord> implements Iterable<T> {
     }
     
     public void remove(T aRecord) {
-        if (fRecords.remove(aRecord)) Logger.getLogger("DBSet").info("fRecords");
-        if (fKeyIndex.remove(aRecord.key) != null) Logger.getLogger("DBSet").info("fKeyIndex");
+        if (fRecords.remove(aRecord))
+            Logger.getLogger("DBSet").info("fRecords");
+        if (fKeyIndex.remove(aRecord.key) != null)
+            Logger.getLogger("DBSet").info("fKeyIndex");
         removedRecord(aRecord);
     }
     

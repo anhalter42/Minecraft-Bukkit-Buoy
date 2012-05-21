@@ -57,15 +57,13 @@ public class BuoyMain extends JavaPlugin {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        ArrayList<String> lKeys = new ArrayList<String>();
-        lKeys.add("1");
-        if (!lKeys.contains("1")) lKeys.add("2");
-        String lStr = DBRecord.arrayToKeys(lKeys);
-        Logger.getLogger("keys").info(lStr);
-        
-        //for(BlockPosition lPos : new WorldLineWalk(new BlockPosition(0, 0, 0), new BlockPosition(10, 20, 30))) {
-        //    Logger.getLogger("xyz").info(lPos.toString());
-        //}
+        File lFile = new File("/Users/andre/craftbukkit/plugins/Buoy/world_buoy.csv");
+        WaterPathDB lDB = new WaterPathDB(null, lFile);
+        lDB.load();
+        Logger.getLogger("xx").info("size = " + new Integer(lDB.size()));
+        WaterPathItem lItem = lDB.getRecord(3);
+        lDB.remove(lItem);
+        Logger.getLogger("xx").info("size = " + new Integer(lDB.size()));
     }
 
     @Override

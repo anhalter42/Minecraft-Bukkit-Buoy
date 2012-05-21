@@ -44,11 +44,12 @@ public class BoatDriver implements Runnable {
         Location lBoatLoc = fBoat.getLocation();
         World lWorld = fBoat.getWorld();
         if (fStart) {
-            //TODO decide the side
+            boolean lRedEmpty = fDestination.red_links.isEmpty();
+            boolean lGreenEmpty = fDestination.green_links.isEmpty();
             Vector lPos = fBoat.getLocation().toVector();
             Vector lRedVector = fDestination.red_position.getVector().subtract(lPos);
             Vector lGreenVector = fDestination.green_position.getVector().subtract(lPos);
-            if (lRedVector.angle(fStartVector) < lGreenVector.angle(fStartVector)) {
+            if ((lRedVector.angle(fStartVector) < lGreenVector.angle(fStartVector) && !lRedEmpty) || lGreenEmpty) {
                 fSide = Side.Red;
                 sendPlayer("Lets travel the red way.");
             } else {

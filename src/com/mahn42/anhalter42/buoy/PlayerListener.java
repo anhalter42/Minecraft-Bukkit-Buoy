@@ -54,7 +54,7 @@ public class PlayerListener implements Listener {
                                     //
                                     // insert new buoy
                                     //
-                                    BuoyFinder lTask = new BuoyFinder(plugin, lBlock, event.getPlayer());
+                                    BuoyFinder lTask = new BuoyFinder(plugin, lBlock, lPlayer);
                                     plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, lTask);
                                 }
                             } else {

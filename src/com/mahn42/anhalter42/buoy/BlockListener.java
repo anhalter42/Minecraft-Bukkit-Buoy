@@ -27,7 +27,7 @@ public class BlockListener implements Listener {
         Block lBlock = aEvent.getBlock();
         if (lBlock.getType().equals(Material.WOOL)) {
             byte lColor = lBlock.getData();
-            if (lColor == 13 || lColor == 14) { // green or red
+            if (lColor == plugin.configGreenBouyColor || lColor == plugin.configRedBouyColor) { // green or red
                 WaterPathDB lDB = plugin.getWaterPathDB(lBlock.getWorld().getName());
                 WaterPathItem lBuoy = lDB.getItemAt(lBlock.getLocation());
                 while (lBuoy != null) {

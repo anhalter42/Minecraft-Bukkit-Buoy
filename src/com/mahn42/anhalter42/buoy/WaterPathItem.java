@@ -70,7 +70,7 @@ public class WaterPathItem extends DBRecord {
     public boolean equals(Object aObject) {
         if (aObject instanceof WaterPathItem) {
             WaterPathItem lItem = (WaterPathItem) aObject;
-            return lItem.green_position.equals(green_position) && lItem.red_position.equals(green_position);
+            return lItem.green_position.equals(green_position) && lItem.red_position.equals(red_position);
         } else {
             return false;
         }
