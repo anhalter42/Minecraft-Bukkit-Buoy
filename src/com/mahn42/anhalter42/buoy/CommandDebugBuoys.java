@@ -38,39 +38,42 @@ public class CommandDebugBuoys implements CommandExecutor {
                 lId = Material.WOOL.getId();
             }
             for(WaterPathItem lItem : lDB) {
-                for(String lKey : lItem.red_links) {
-                    WaterPathItem lNextItem = lDB.getRecord(lKey);
-                    for(BlockPosition lPos : new WorldLineWalk(lItem.way_red_position, lNextItem.way_red_position)) {
-                        if (lRemove) {
-                            for(int dx = -1; dx <= 1; dx++) {
-                                for (int dz = -1; dz <= 1; dz++) {
-                                    Block lBlock = lPos.getBlockAt(lWorld, dx, 0, dz);
-                                    int lBId = lBlock.getTypeId();
-                                    if (lBId == 8 || lBId == 9 || lBId == 35) {
-                                        lBlock.setTypeIdAndData(lId, plugin.configRedBouyColor, false);
+                //TODO only if in near from player
+                if (lItem.player.equalsIgnoreCase(lPlayer.getName())) {
+                    for(String lKey : lItem.red_links) {
+                        WaterPathItem lNextItem = lDB.getRecord(lKey);
+                        for(BlockPosition lPos : new WorldLineWalk(lItem.way_red_position, lNextItem.way_red_position)) {
+                            if (lRemove) {
+                                for(int dx = -1; dx <= 1; dx++) {
+                                    for (int dz = -1; dz <= 1; dz++) {
+                                        Block lBlock = lPos.getBlockAt(lWorld, dx, 0, dz);
+                                        int lBId = lBlock.getTypeId();
+                                        if (lBId == 8 || lBId == 9 || lBId == 35) {
+                                            lBlock.setTypeIdAndData(lId, plugin.configRedBouyColor, false);
+                                        }
                                     }
                                 }
+                            } else {
+                                lPos.getBlock(lWorld).setTypeIdAndData(lId, plugin.configRedBouyColor, false);
                             }
-                        } else {
-                            lPos.getBlock(lWorld).setTypeIdAndData(lId, plugin.configRedBouyColor, false);
                         }
                     }
-                }
-                for(String lKey : lItem.green_links) {
-                    WaterPathItem lNextItem = lDB.getRecord(lKey);
-                    for(BlockPosition lPos : new WorldLineWalk(lItem.way_green_position, lNextItem.way_green_position)) {
-                        if (lRemove) {
-                            for(int dx = -1; dx <= 1; dx++) {
-                                for (int dz = -1; dz <= 1; dz++) {
-                                    Block lBlock = lPos.getBlockAt(lWorld, dx, 0, dz);
-                                    int lBId = lBlock.getTypeId();
-                                    if (lBId == 8 || lBId == 9 || lBId == 35) {
-                                        lBlock.setTypeIdAndData(lId, plugin.configGreenBouyColor, false);
+                    for(String lKey : lItem.green_links) {
+                        WaterPathItem lNextItem = lDB.getRecord(lKey);
+                        for(BlockPosition lPos : new WorldLineWalk(lItem.way_green_position, lNextItem.way_green_position)) {
+                            if (lRemove) {
+                                for(int dx = -1; dx <= 1; dx++) {
+                                    for (int dz = -1; dz <= 1; dz++) {
+                                        Block lBlock = lPos.getBlockAt(lWorld, dx, 0, dz);
+                                        int lBId = lBlock.getTypeId();
+                                        if (lBId == 8 || lBId == 9 || lBId == 35) {
+                                            lBlock.setTypeIdAndData(lId, plugin.configGreenBouyColor, false);
+                                        }
                                     }
                                 }
+                            } else {
+                                lPos.getBlock(lWorld).setTypeIdAndData(lId, plugin.configGreenBouyColor, false);
                             }
-                        } else {
-                            lPos.getBlock(lWorld).setTypeIdAndData(lId, plugin.configGreenBouyColor, false);
                         }
                     }
                 }
