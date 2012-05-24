@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
@@ -155,10 +156,9 @@ public class WaterPathDB extends DBSet<WaterPathItem> {
                     for(BlockPosition lPos : new WorldLineWalk(aItem.way_red_position, lItem.way_red_position)) {
                         //Logger.getLogger("updateLinks").info(lPos.toString());
                         if (lFirst) lFirst = false; else {
-                            int lId = lPos.getBlockTypeId(fWorld);
-                            if (!((lId == 8) || (lId == 9))) {
-                                Logger.getLogger("updateLinks").info("blocked by " + lId);
-                                //fWorld.getBlockAt(lPos.x, lPos.y + 1, lPos.z).setTypeId(Material.TORCH.getId());
+                            Material lMat = lPos.getBlockType(fWorld);
+                            if (!(lMat.equals(Material.WATER) || lMat.equals(Material.STATIONARY_WATER))) {
+                                Logger.getLogger("updateLinks").info("red blocked by " + lMat);
                                 lRedWaterline = false;
                                 break;
                             }
@@ -173,9 +173,9 @@ public class WaterPathDB extends DBSet<WaterPathItem> {
                     lFirst = true;
                     for(BlockPosition lPos : new WorldLineWalk(aItem.way_green_position, lItem.way_green_position)) {
                         if (lFirst) lFirst = false; else {
-                            int lId = lPos.getBlockTypeId(fWorld);
-                            if (!((lId == 8) || (lId == 9))) {
-                                Logger.getLogger("updateLinks").info("blocked by " + lId);
+                            Material lMat = lPos.getBlockType(fWorld);
+                            if (!(lMat.equals(Material.WATER) || lMat.equals(Material.STATIONARY_WATER))) {
+                                Logger.getLogger("updateLinks").info("green blocked by " + lMat);
                                 //fWorld.getBlockAt(lPos.x, lPos.y + 1, lPos.z).setTypeId(Material.TORCH.getId());
                                 lGreenWaterline = false;
                                 break;

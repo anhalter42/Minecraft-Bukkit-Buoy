@@ -51,8 +51,8 @@ public class PlayerListener implements Listener {
                         Location lLoc = lBlock.getLocation();
                         if ((lColor == plugin.configRedBouyColor) || (lColor == plugin.configGreenBouyColor)) { // red or green
                             if (!lPlayer.isSneaking()) {
-                                int lTypeId = lBlock.getWorld().getBlockTypeIdAt(lLoc.getBlockX(), lLoc.getBlockY() - 1, lLoc.getBlockZ());
-                                if ((lTypeId == 9) || (lTypeId == 8)) {
+                                Material lMat = lBlock.getWorld().getBlockAt(lLoc.getBlockX(), lLoc.getBlockY() - 1, lLoc.getBlockZ()).getType();
+                                if (lMat.equals(Material.STATIONARY_WATER) || lMat.equals(Material.WATER)) {
                                     //
                                     // insert new buoy
                                     //

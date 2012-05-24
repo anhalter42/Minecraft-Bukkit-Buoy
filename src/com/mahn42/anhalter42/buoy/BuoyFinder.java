@@ -7,6 +7,7 @@ package com.mahn42.anhalter42.buoy;
 import java.util.ArrayList;
 import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -53,7 +54,9 @@ public class BuoyFinder implements Runnable {
                         boolean lWaterLine = true;
                         for(BlockPosition lPos : new WorldLineWalk(lLoc, lLoc2)) {
                             int lId = lPos.getBlockTypeId(lWorld);
-                            if (!((lId == 8) || (lId == 9) || (lId == 35))) {
+                            if (!((lId == Material.WATER.getId())
+                                    || (lId == Material.STATIONARY_WATER.getId())
+                                    || (lId == Material.WOOL.getId()))) {
                                 lWaterLine = false;
                                 break;
                             }

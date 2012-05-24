@@ -27,15 +27,15 @@ public class CommandDebugBuoys implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender aCommandSender, Command aCommand, String aString, String[] aStrings) {
         if (aCommandSender instanceof Player) {
-            int lId;
+            Material lSetMaterial;
             boolean lRemove = aStrings.length > 0;
             Player lPlayer = (Player) aCommandSender;
             World lWorld = lPlayer.getWorld();
             WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
             if (lRemove) {
-                lId = Material.WATER.getId();
+                lSetMaterial = Material.WATER;
             } else {
-                lId = Material.WOOL.getId();
+                lSetMaterial = Material.WOOL;
             }
             for(WaterPathItem lItem : lDB) {
                 //TODO only if in near from player
@@ -47,14 +47,16 @@ public class CommandDebugBuoys implements CommandExecutor {
                                 for(int dx = -1; dx <= 1; dx++) {
                                     for (int dz = -1; dz <= 1; dz++) {
                                         Block lBlock = lPos.getBlockAt(lWorld, dx, 0, dz);
-                                        int lBId = lBlock.getTypeId();
-                                        if (lBId == 8 || lBId == 9 || lBId == 35) {
-                                            lBlock.setTypeIdAndData(lId, plugin.configRedBouyColor, false);
+                                        Material lMat = lBlock.getType();
+                                        if (lMat.equals(Material.WATER)
+                                                || lMat.equals(Material.STATIONARY_WATER)
+                                                || lMat.equals(Material.WOOL)) {
+                                            lBlock.setTypeIdAndData(lSetMaterial.getId(), plugin.configRedBouyColor, false);
                                         }
                                     }
                                 }
                             } else {
-                                lPos.getBlock(lWorld).setTypeIdAndData(lId, plugin.configRedBouyColor, false);
+                                lPos.getBlock(lWorld).setTypeIdAndData(lSetMaterial.getId(), plugin.configRedBouyColor, false);
                             }
                         }
                     }
@@ -65,14 +67,16 @@ public class CommandDebugBuoys implements CommandExecutor {
                                 for(int dx = -1; dx <= 1; dx++) {
                                     for (int dz = -1; dz <= 1; dz++) {
                                         Block lBlock = lPos.getBlockAt(lWorld, dx, 0, dz);
-                                        int lBId = lBlock.getTypeId();
-                                        if (lBId == 8 || lBId == 9 || lBId == 35) {
-                                            lBlock.setTypeIdAndData(lId, plugin.configGreenBouyColor, false);
+                                        Material lMat = lBlock.getType();
+                                        if (lMat.equals(Material.WATER)
+                                                || lMat.equals(Material.STATIONARY_WATER)
+                                                || lMat.equals(Material.WOOL)) {
+                                            lBlock.setTypeIdAndData(lSetMaterial.getId(), plugin.configGreenBouyColor, false);
                                         }
                                     }
                                 }
                             } else {
-                                lPos.getBlock(lWorld).setTypeIdAndData(lId, plugin.configGreenBouyColor, false);
+                                lPos.getBlock(lWorld).setTypeIdAndData(lSetMaterial.getId(), plugin.configGreenBouyColor, false);
                             }
                         }
                     }
