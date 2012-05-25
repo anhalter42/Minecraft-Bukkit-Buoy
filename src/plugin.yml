@@ -2,7 +2,7 @@
 name: Buoy
 main: com.mahn42.anhalter42.buoy.BuoyMain
 version: 0.31
-depend: [dynmap]
+depend: [dynmap,MAHN42-Framework]
 commands:
    buoy_list:
       description: List all buoys in the current world.
@@ -19,6 +19,11 @@ commands:
       usage: /buoy_debug [options]
       permission: buoy.debug
       permission-message: You don't have permission
+   buoy_dynmap:
+      description: control buoy markers on dynamp.
+      usage: /buoy_dynmap [update]
+      permission: buoy.dynmap
+      permission-message: You don't have permission
 permissions:
     buoy.*:
         description: Gives access to all buoy commands
@@ -34,5 +39,8 @@ permissions:
         default: false
     buoy.debug:
         description: Allows you to debug
+        default: false
+    buoy.dynmap:
+        description: Allows you to control dynmap buoy marker
         default: false
         

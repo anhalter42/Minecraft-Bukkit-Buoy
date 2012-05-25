@@ -17,9 +17,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
-
 import org.dynmap.DynmapAPI;
-import org.dynmap.markers.*;
+import org.dynmap.markers.CircleMarker;
+import org.dynmap.markers.MarkerAPI;
+import org.dynmap.markers.MarkerSet;
 /**
  *
  * @author andre
@@ -92,7 +93,7 @@ public class BuoyMain extends JavaPlugin {
             Plugin p = event.getPlugin();
             String name = p.getDescription().getName();
             if(name.equals("dynmap")) {
-                plugin.activateDynMap();
+                plugin.updateDynMapBuoy();
             }
         }
     }    
@@ -105,6 +106,7 @@ public class BuoyMain extends JavaPlugin {
         getCommand("buoy_list").setExecutor(new CommandListBuoys(this));
         getCommand("buoy_remove").setExecutor(new CommandRemoveBuoys(this));
         getCommand("buoy_debug").setExecutor(new CommandDebugBuoys(this));
+        getCommand("buoy_dynmap").setExecutor(new CommandUpdateDynmap(this));
         
         getServer().getPluginManager().registerEvents(new ServerListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
@@ -116,17 +118,18 @@ public class BuoyMain extends JavaPlugin {
         /* Get dynmap */
         fDynmap = pm.getPlugin("dynmap");
         if(fDynmap != null && fDynmap.isEnabled()) {
-            activateDynMap();
+            updateDynMapBuoy();
         }
     }
 
-    private void activateDynMap() {
+    public void updateDynMapBuoy() {
         DynmapAPI lDynmapAPI = (DynmapAPI)fDynmap; /* Get API */
         MarkerAPI lMarkerAPI = lDynmapAPI.getMarkerAPI();
         MarkerSet lMarkerSet = lMarkerAPI.getMarkerSet("Buoy");
-        if (lMarkerSet == null) {
-            lMarkerSet = lMarkerAPI.createMarkerSet("buoy.markerset", "Buoys", null, false);
+        if (lMarkerSet != null) {
+            lMarkerSet.deleteMarkerSet();
         }
+        lMarkerSet = lMarkerAPI.createMarkerSet("buoy.markerset", "Buoys", null, false);
         WaterPathDB lDB = getWaterPathDB("world");
         for(WaterPathItem lItem : lDB) {
             CircleMarker lMarker = lMarkerSet.createCircleMarker(lItem.key, null, true, "world", lItem.mid_position.x, lItem.mid_position.y, lItem.mid_position.z, 3, 3, false);
@@ -188,7 +191,7 @@ public class BuoyMain extends JavaPlugin {
         fBoatAutomatic.deactivateMovement(aBoat);
         if (fBoatDrivers.containsKey(aBoat)) {
             BoatDriver lDriver = fBoatDrivers.get(aBoat);
-            getLogger().info("boat deactivated. " + new Integer(lDriver.getTaskId()).toString());
+            //getLogger().info("boat deactivated. " + new Integer(lDriver.getTaskId()).toString());
             getServer().getScheduler().cancelTask(lDriver.getTaskId());
             fBoatDrivers.remove(aBoat);
         }
@@ -198,7 +201,7 @@ public class BuoyMain extends JavaPlugin {
         BoatDriver lDriver = new BoatDriver(this, aBoat, aItem, aBeatVector);
         int lTaskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, lDriver, 1, configTicksBoatDriver);
         lDriver.setTaskId(lTaskId);
-        getLogger().info("boat activated. " + new Integer(lDriver.getTaskId()).toString());
+        //getLogger().info("boat activated. " + new Integer(lDriver.getTaskId()).toString());
         fBoatDrivers.put(aBoat, lDriver);
     }
 
