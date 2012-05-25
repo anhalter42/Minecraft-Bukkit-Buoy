@@ -81,3 +81,10 @@ Trivia
 ------
 
 Wird die rote oder grüne Wolle entfernt, so wird auch die Definition der Boje zerstört. 
+
+Development
+===========
+
+Es wird bukkit.jar im Ordner ../libs benötigt.
+Zum Compilieren wird zusätzlich die dynmap-api.jar vom Projekt dynmap benötigt und in den Ordner ../libs als dynmap-api.jar gelegt.
+
