@@ -5,7 +5,6 @@
 package com.mahn42.anhalter42.buoy;
 
 import java.util.Iterator;
-import java.util.logging.Logger;
 import org.bukkit.Location;
 
 /**
@@ -50,9 +49,6 @@ public class WorldLineWalk implements Iterable<BlockPosition> {
         protected int sy;
         protected int sz;
 
-        //protected int x;
-        //protected int y;
-        //protected int z;
         protected int idx = 1;
         
         protected int xd;
@@ -86,9 +82,6 @@ public class WorldLineWalk implements Iterable<BlockPosition> {
             sy = sign(dy);
             sz = sign(dz);
 
-            //x = fStart.x;
-            //y = fStart.y;
-            //z = fStart.z;
             idx = 1;
             if(ax >= Math.max(ay,az)) {	// x dominant
                 yd = ay - ax/2;
@@ -106,115 +99,6 @@ public class WorldLineWalk implements Iterable<BlockPosition> {
             end = false;
         }
                 
-    /*
-    public static void line3(int x1, int y1, int z1, int x2, int y2, int z2) {
-        int dx = x2 - x1;
-        int dy = y2 - y1;
-        int dz = z2 - z1;
-
-        int ax = Math.abs(dx)*2;
-        int ay = Math.abs(dy)*2;
-        int az = Math.abs(dz)*2;
-
-        int sx = sign(dx);
-        int sy = sign(dy);
-        int sz = sign(dz);
-
-        int x = x1;
-        int y = y1;
-        int z = z1;
-        int idx = 1;
-
-        if(ax >= Math.max(ay,az)) {	//		% x dominant
-            int yd = ay - ax/2;
-            int zd = az - ax/2;
-
-            while(true) {
-                Logger.getLogger("xyz").info(new Integer(x).toString()+","+new Integer(y).toString()+","+new Integer(z).toString());
-                //X(idx) = x;
-                //Y(idx) = y;
-                //Z(idx) = z;
-                idx = idx + 1;
-
-                if (x == x2) //% end
-                    break;
-
-                if (yd >= 0) { //% move along y
-                    y = y + sy;
-                    yd = yd - ax;
-                }
-
-                if (zd >= 0) { // move along z
-                    z = z + sz;
-                    zd = zd - ax;
-                }
-
-                x  = x  + sx; // move along x
-                yd = yd + ay;
-                zd = zd + az;
-            }
-        } else if (ay>= Math.max(ax,az)) { // y dominant
-            int xd = ax - ay/2;
-            int zd = az - ay/2;
-
-            while(true) {
-                Logger.getLogger("xyz").info(new Integer(x).toString()+","+new Integer(y).toString()+","+new Integer(z).toString());
-                //X(idx) = x;
-                //Y(idx) = y;
-                //Z(idx) = z;
-                idx = idx + 1;
-
-                if (y == y2) // end
-                    break;
-
-                if (xd >= 0) { // move along x
-                    x = x + sx;
-                    xd = xd - ay;
-                }
-
-                if (zd >= 0) { // move along z
-                    z = z + sz;
-                    zd = zd - ay;
-                }
-
-                y  = y  + sy; // move along y
-                xd = xd + ax;
-                zd = zd + az;
-            }
-        } else if (az>= Math.max(ax,ay)) { // z dominant
-            int xd = ax - az/2;
-            int yd = ay - az/2;
-
-            while(true) {
-                Logger.getLogger("xyz").info(new Integer(x).toString()+","+new Integer(y).toString()+","+new Integer(z).toString());
-                //X(idx) = x;
-                //Y(idx) = y;
-                //Z(idx) = z;
-                idx = idx + 1;
-
-                if (z == z2) // end
-                    break;
-
-                if (xd >= 0) { // move along x
-                    x = x + sx;
-                    xd = xd - az;
-                }
-
-                if (yd >= 0) { // move along y
-                    y = y + sy;
-                    yd = yd - az;
-                }
-
-                z  = z  + sz; // move along z
-                xd = xd + ax;
-                yd = yd + ay;
-            }
-        }
-        return; // bresenh    
-    }
-    * 
-    */
-
         @Override
         public boolean hasNext() {
             return !end;

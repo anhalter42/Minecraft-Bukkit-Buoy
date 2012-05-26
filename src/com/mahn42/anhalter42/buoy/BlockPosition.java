@@ -61,6 +61,15 @@ public class BlockPosition {
             return false;
         }
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + this.x;
+        hash = 53 * hash + this.y;
+        hash = 53 * hash + this.z;
+        return hash;
+    }
     
     @Override
     public String toString() {

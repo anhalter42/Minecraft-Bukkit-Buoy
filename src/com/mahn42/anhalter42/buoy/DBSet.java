@@ -53,7 +53,7 @@ public class DBSet<T extends DBRecord> implements Iterable<T> {
                     }
                 }
             } catch (IOException ex) {
-                Logger.getLogger(WaterPathDB.class.getName()).log(Level.SEVERE, null, ex);
+                getLogger().log(Level.SEVERE, null, ex);
             }            
         }
     }
@@ -72,7 +72,7 @@ public class DBSet<T extends DBRecord> implements Iterable<T> {
             }
             lWriter.close();
         } catch (IOException ex) {
-            Logger.getLogger(WaterPathDB.class.getName()).log(Level.SEVERE, null, ex);
+            getLogger().log(Level.SEVERE, null, ex);
         }
     }
     
@@ -99,10 +99,10 @@ public class DBSet<T extends DBRecord> implements Iterable<T> {
     }
     
     public void remove(T aRecord) {
-        if (fRecords.remove(aRecord))
-            Logger.getLogger("DBSet").info("fRecords");
-        if (fKeyIndex.remove(aRecord.key) != null)
-            Logger.getLogger("DBSet").info("fKeyIndex");
+        if (!fRecords.remove(aRecord))
+            getLogger().info("remove: not found");
+        if (fKeyIndex.remove(aRecord.key) == null)
+            getLogger().info("remove: index not found");
         removedRecord(aRecord);
     }
     
@@ -116,6 +116,10 @@ public class DBSet<T extends DBRecord> implements Iterable<T> {
 
     public int size() {
         return fRecords.size();
+    }
+    
+    protected Logger getLogger() {
+        return Logger.getLogger(getClass().getSimpleName());
     }
     
     @Override
