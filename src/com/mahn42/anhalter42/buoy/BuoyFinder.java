@@ -41,6 +41,7 @@ public class BuoyFinder implements Runnable {
         WaterPathItem lItem = lDB.getItemAt(lLoc);
         if (lItem != null) {
             lItem.calcPositions();
+            plugin.updateDynMapBuoy();
             player.sendMessage("Buoy is already active.");
         } else {
             Block[] lBlocks = findNearestBuoy(lWorld, lLoc, plugin.configMaxBuoyDistance, null, aColor);
@@ -71,6 +72,7 @@ public class BuoyFinder implements Runnable {
                             lDB.addRecord(lItem);
                             player.sendMessage("Buoy activated.");
                             player.playEffect(lLoc, Effect.CLICK2, (byte)0);
+                            plugin.updateDynMapBuoy();
                             break;
                         } else {
                             player.sendMessage("Buoys must have a direct link with water only!");

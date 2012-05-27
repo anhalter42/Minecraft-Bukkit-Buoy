@@ -73,6 +73,7 @@ public class PlayerListener implements Listener {
                                         lBuoy.green_links.clear();
                                         lPlayer.sendMessage("Clearing green destinations!");
                                     }
+                                    plugin.updateDynMapBuoy();
                                 } else {
                                     lPlayer.sendMessage("No buoy for clearing destinations!");
                                 }
@@ -139,6 +140,7 @@ public class PlayerListener implements Listener {
                                                 } else { // green
                                                     if (!lBuoy.green_links.contains(lItem.key)) lBuoy.green_links.add(lItem.key);
                                                 }
+                                                plugin.updateDynMapBuoy();
                                                 break;
                                             }
                                         } else {

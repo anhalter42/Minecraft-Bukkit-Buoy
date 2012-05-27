@@ -6,6 +6,7 @@ package com.mahn42.anhalter42.buoy;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Set;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Boat;
@@ -18,9 +19,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 import org.dynmap.DynmapAPI;
-import org.dynmap.markers.CircleMarker;
-import org.dynmap.markers.MarkerAPI;
-import org.dynmap.markers.MarkerSet;
+import org.dynmap.markers.*;
 /**
  *
  * @author andre
@@ -123,24 +122,68 @@ public class BuoyMain extends JavaPlugin {
     }
 
     public void updateDynMapBuoy() {
-        DynmapAPI lDynmapAPI = (DynmapAPI)fDynmap; /* Get API */
-        MarkerAPI lMarkerAPI = lDynmapAPI.getMarkerAPI();
-        MarkerSet lMarkerSet = lMarkerAPI.getMarkerSet("Buoy");
-        if (lMarkerSet != null) {
-            lMarkerSet.deleteMarkerSet();
+        if (fDynmap != null) {
+            DynmapAPI lDynmapAPI = (DynmapAPI)fDynmap; /* Get API */
+            MarkerAPI lMarkerAPI = lDynmapAPI.getMarkerAPI();
+            MarkerSet lMarkerSet = lMarkerAPI.getMarkerSet("buoy.markerset");
+            if (lMarkerSet != null) {
+                /*Set<Marker> lMarkers = lMarkerSet.getMarkers();
+                for(Marker lMarker : lMarkers) {
+                    lMarker.deleteMarker();
+                }*/
+                lMarkerSet.deleteMarkerSet();
+                lMarkerSet = lMarkerAPI.createMarkerSet("buoy.markerset", "Buoys", null, false);
+                if (lMarkerSet == null) {
+                    return;
+                }
+            } else {
+                lMarkerSet = lMarkerAPI.createMarkerSet("buoy.markerset", "Buoys", null, false);
+                if (lMarkerSet == null) {
+                    return;
+                }
+            }
+            getLogger().info("update dynmap markers buoy");
+            WaterPathDB lDB = getWaterPathDB("world");
+            double[] lXs = new double[2];
+            double[] lYs = new double[2];
+            double[] lZs = new double[2];
+            for(WaterPathItem lItem : lDB) {
+                if (lItem.red_links.isEmpty() && lItem.green_links.isEmpty()) {
+                    CircleMarker lMarker = lMarkerSet.createCircleMarker(lItem.key, "", true, "world", lItem.mid_position.x, lItem.mid_position.y, lItem.mid_position.z, 3, 3, false);
+                    if (lMarker != null)
+                        lMarker.setLineStyle(1, 0.75f, 0xFF8080);
+                } else {
+                    lXs[0] = lItem.way_red_position.x;
+                    lYs[0] = lItem.way_red_position.y;
+                    lZs[0] = lItem.way_red_position.z;
+                    for(String lKey : lItem.red_links) {
+                        WaterPathItem lNextItem = lDB.getRecord(lKey);
+                        if (lNextItem != null) {
+                            lXs[1] = lNextItem.way_red_position.x;
+                            lYs[1] = lNextItem.way_red_position.y;
+                            lZs[1] = lNextItem.way_red_position.z;
+                            PolyLineMarker lLine = lMarkerSet.createPolyLineMarker(lItem.key+lKey, "", true, "world", lXs, lYs, lZs, false);
+                            if (lLine != null)
+                                lLine.setLineStyle(1, 0.75, 0xF04040);
+                        }
+                    }
+                    lXs[0] = lItem.way_green_position.x;
+                    lYs[0] = lItem.way_green_position.y;
+                    lZs[0] = lItem.way_green_position.z;
+                    for(String lKey : lItem.green_links) {
+                        WaterPathItem lNextItem = lDB.getRecord(lKey);
+                        if (lNextItem != null) {
+                            lXs[1] = lNextItem.way_green_position.x;
+                            lYs[1] = lNextItem.way_green_position.y;
+                            lZs[1] = lNextItem.way_green_position.z;
+                            PolyLineMarker lLine = lMarkerSet.createPolyLineMarker(lItem.key+lKey, "", true, "world", lXs, lYs, lZs, false);
+                            if (lLine != null)
+                                lLine.setLineStyle(1, 0.75f, 0x40F040);
+                        }
+                    }
+                }
+            }
         }
-        lMarkerSet = lMarkerAPI.createMarkerSet("buoy.markerset", "Buoys", null, false);
-        WaterPathDB lDB = getWaterPathDB("world");
-        for(WaterPathItem lItem : lDB) {
-            CircleMarker lMarker = lMarkerSet.createCircleMarker(lItem.key, null, true, "world", lItem.mid_position.x, lItem.mid_position.y, lItem.mid_position.z, 3, 3, false);
-        }
-        /*
-        double[] x = new double[2]; x[0] = 0.0; x[1] = 30.0;
-        double[] y = new double[2]; y[0] = 64.0; y[1] = 64.0;
-        double[] z = new double[2]; z[0] = 0.0; z[1] = 60.0;
-        PolyLineMarker lMarker = lMarkerSet.createPolyLineMarker("S1", "S2", true, "world", x, y, z, false);
-        //lMarker.se
-        */
     }
     
     @Override

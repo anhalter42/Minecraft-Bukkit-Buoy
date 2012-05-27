@@ -35,6 +35,7 @@ public class BlockListener implements Listener {
                     aEvent.getPlayer().sendMessage("Buoy is destroyed.");
                     lBuoy = lDB.getItemAt(lBlock.getLocation());
                 }
+                plugin.updateDynMapBuoy();
             }
         }
     }

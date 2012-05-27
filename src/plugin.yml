@@ -1,7 +1,7 @@
 ## YAML Template.
 name: Buoy
 main: com.mahn42.anhalter42.buoy.BuoyMain
-version: 0.31
+version: 0.4
 depend: [dynmap,MAHN42-Framework]
 commands:
    buoy_list:
@@ -31,6 +31,7 @@ permissions:
             buoy.list: true
             buoy.remove: true
             buoy.debug: true
+            buoy.dynmap: true
     buoy.list:
         description: Allows you to list all buoys in the current world
         default: true
