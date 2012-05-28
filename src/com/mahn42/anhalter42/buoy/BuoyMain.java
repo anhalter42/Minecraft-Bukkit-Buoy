@@ -132,16 +132,16 @@ public class BuoyMain extends JavaPlugin {
                     lMarker.deleteMarker();
                 }*/
                 lMarkerSet.deleteMarkerSet();
+                /*lMarkerSet = lMarkerAPI.createMarkerSet("buoy.markerset", "Buoys", null, false);
+                if (lMarkerSet == null) {
+                    return;
+                }*/
+            }// else {
                 lMarkerSet = lMarkerAPI.createMarkerSet("buoy.markerset", "Buoys", null, false);
                 if (lMarkerSet == null) {
                     return;
                 }
-            } else {
-                lMarkerSet = lMarkerAPI.createMarkerSet("buoy.markerset", "Buoys", null, false);
-                if (lMarkerSet == null) {
-                    return;
-                }
-            }
+            //}
             getLogger().info("update dynmap markers buoy");
             WaterPathDB lDB = getWaterPathDB("world");
             double[] lXs = new double[2];
