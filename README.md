@@ -71,6 +71,7 @@ Besondere Bojen
 Stößt ein Rot/Grün Weg auf einen Grün/Rot Weg kann der Weg nicht automatisch fortgesetzt werden.
 
 R---->R      G---->G
+
 G<----G      R<----R
 
 Um das Problem zu lösen kann an der jeweiligen Boje ein gelber Block Wolle positioniert werden.
@@ -78,6 +79,7 @@ Wird neben der roten Boje eine gelber Wollblock gesetzt so wird vom "roten" Weg 
 Umgekehrt gilt dies für die grüne Boje.
 
 R---->R---->GY---->G
+
 G<----GY<----R<----R
 
 Kommandos
