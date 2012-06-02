@@ -92,7 +92,11 @@ Geplantes
 ---------
 
 Mit Redstone Fackeln sollen Gabelungen geschalten werden können.
-Unterstütztung von Dynmap um die Wege zu visualisieren zu können.
+
+Dynmap
+------
+
+Ist Dynmap installiert, werden die Schifffahrtswege in einer eigenen Ebene visualisiert.
 
 Trivia
 ------
