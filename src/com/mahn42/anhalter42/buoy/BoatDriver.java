@@ -158,6 +158,17 @@ public class BoatDriver implements Runnable {
                 if (lNextDestination != null) {
                     fLastItem = fDestination;
                     fDestination = lNextDestination;
+                    plugin.getLogger().info(fDestination.toString());
+                    if (fDestination.swapRedToGreen && fSide == Side.Red) {
+                        sendPlayer("Now lets travel the green way.");
+                        plugin.getLogger().info("swap to green");
+                        fSide = Side.Green;
+                    }
+                    if (fDestination.swapGreenToRed && fSide == Side.Green) {
+                        sendPlayer("Now lets travel the red way.");
+                        plugin.getLogger().info("swap to red");
+                        fSide = Side.Red;
+                    }
                 } else {
                     sendPlayer("No next destination.");
                     deactivate(); // to many destinations

@@ -6,6 +6,9 @@ package com.mahn42.anhalter42.buoy;
 
 import java.util.ArrayList;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
 /**
@@ -22,6 +25,8 @@ public class WaterPathItem extends DBRecord {
     public ArrayList<String> red_links;
     public ArrayList<String> green_links;
     public String player;
+    public boolean swapRedToGreen = false;
+    public boolean swapGreenToRed = false;
     
     @Override
     protected void init() {
@@ -78,7 +83,11 @@ public class WaterPathItem extends DBRecord {
     
     @Override
     public String toString() {
-        return red_position.toString() + "[" + new Integer(red_links.size()) + "]" + "-" + green_position.toString() + "[" + new Integer(green_links.size()) + "]";
+        return red_position.toString() + "[" + new Integer(red_links.size()) + "]"
+                + (swapRedToGreen ? "RG" : "")
+                + "-"
+                + green_position.toString() + "[" + new Integer(green_links.size()) + "]"
+                + (swapGreenToRed ? "GR" : "");
     }
     
     @Override
@@ -102,6 +111,8 @@ public class WaterPathItem extends DBRecord {
         aCols.add(arrayToKeys(red_links));
         aCols.add(arrayToKeys(green_links));
         aCols.add(player);
+        aCols.add(swapRedToGreen);
+        aCols.add(swapGreenToRed);
     }
     
     @Override
@@ -125,6 +136,8 @@ public class WaterPathItem extends DBRecord {
         aCols.popKeys(red_links);
         aCols.popKeys(green_links);
         player = aCols.pop();
+        swapRedToGreen = Boolean.parseBoolean(aCols.pop());
+        swapGreenToRed = Boolean.parseBoolean(aCols.pop());
     }
     
     public void calcPositions() {
@@ -155,6 +168,22 @@ public class WaterPathItem extends DBRecord {
                     (way_green_position.y + mid_position.y) / 2,
                     (way_green_position.z + mid_position.z) / 2
                 );
+    }
+    
+    public void updateSwapRedGreen(World aWorld) {
+        swapRedToGreen = isSwapBlock(aWorld, red_position,  1,  0)
+                      || isSwapBlock(aWorld, red_position, -1,  0)
+                      || isSwapBlock(aWorld, red_position,  0,  1)
+                      || isSwapBlock(aWorld, red_position,  0, -1);
+        swapGreenToRed = isSwapBlock(aWorld, green_position,  1,  0)
+                      || isSwapBlock(aWorld, green_position, -1,  0)
+                      || isSwapBlock(aWorld, green_position,  0,  1)
+                      || isSwapBlock(aWorld, green_position,  0, -1);
+    }
+    
+    protected boolean isSwapBlock(World aWorld, BlockPosition aPos, int aDX, int aDZ) {
+        Block lBlock = red_position.getLocation(aWorld).add(aDX, 0, aDZ).getBlock();
+        return lBlock.getType().equals(Material.WOOL) && lBlock.getData() == 4; // yellow
     }
     
     public Vector getVector() {
