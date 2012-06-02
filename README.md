@@ -65,6 +65,23 @@ Korrekturen
 Zieldefinitionen der Bojen können gelöscht werden. Dazu geht man in den Schleichenmodus (Sneak, Umschalttaste)
 und schlägt (Rechtsclick) auf den Wolleblock. 
 
+Besondere Bojen
+---------------
+
+Stößt ein Rot/Grün Weg auf einen Grün/Rot Weg kann der Weg nicht automatisch fortgesetzt werden.
+
+R---->R      G---->G
+
+G<----G      R<----R
+
+Um das Problem zu lösen kann an der jeweiligen Boje ein gelber Block Wolle positioniert werden.
+Wird neben der roten Boje eine gelber Wollblock gesetzt so wird vom "roten" Weg auf den grünen Weg gewechselt.
+Umgekehrt gilt dies für die grüne Boje.
+
+R---->R---->GY---->G
+
+G<----GY<----R<----R
+
 Kommandos
 ---------
 
@@ -75,7 +92,11 @@ Geplantes
 ---------
 
 Mit Redstone Fackeln sollen Gabelungen geschalten werden können.
-Unterstütztung von Dynmap um die Wege zu visualisieren zu können.
+
+Dynmap
+------
+
+Ist Dynmap installiert, werden die Schifffahrtswege in einer eigenen Ebene visualisiert.
 
 Trivia
 ------
