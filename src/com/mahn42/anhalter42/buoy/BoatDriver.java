@@ -163,8 +163,7 @@ public class BoatDriver implements Runnable {
                         sendPlayer("Now lets travel the green way.");
                         plugin.getLogger().info("swap to green");
                         fSide = Side.Green;
-                    }
-                    if (fDestination.swapGreenToRed && fSide == Side.Green) {
+                    } else if (fDestination.swapGreenToRed && fSide == Side.Green) {
                         sendPlayer("Now lets travel the red way.");
                         plugin.getLogger().info("swap to red");
                         fSide = Side.Red;

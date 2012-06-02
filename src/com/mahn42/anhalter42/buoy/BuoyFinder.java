@@ -43,7 +43,7 @@ public class BuoyFinder implements Runnable {
             lItem.calcPositions();
             lItem.updateSwapRedGreen(lWorld);
             plugin.updateDynMapBuoy();
-            player.sendMessage((lItem.swapGreenToRed ? "GR" : "") + " " + (lItem.swapRedToGreen ? "RG" : "")) ;
+            //player.sendMessage((lItem.swapGreenToRed ? "GR" : "") + " " + (lItem.swapRedToGreen ? "RG" : "")) ;
             player.sendMessage("Buoy is already active.");
         } else {
             Block[] lBlocks = findNearestBuoy(lWorld, lLoc, plugin.configMaxBuoyDistance, null, aColor);

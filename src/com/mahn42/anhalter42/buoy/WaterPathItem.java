@@ -182,7 +182,7 @@ public class WaterPathItem extends DBRecord {
     }
     
     protected boolean isSwapBlock(World aWorld, BlockPosition aPos, int aDX, int aDZ) {
-        Block lBlock = red_position.getLocation(aWorld).add(aDX, 0, aDZ).getBlock();
+        Block lBlock = aPos.getLocation(aWorld).add(aDX, 0, aDZ).getBlock();
         return lBlock.getType().equals(Material.WOOL) && lBlock.getData() == 4; // yellow
     }
     
