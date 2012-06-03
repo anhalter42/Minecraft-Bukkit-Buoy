@@ -4,6 +4,9 @@
  */
 package com.mahn42.anhalter42.buoy;
 
+import com.mahn42.framework.BlockPosition;
+import com.mahn42.framework.DBSetWorld;
+import com.mahn42.framework.WorldLineWalk;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -16,16 +19,14 @@ import org.bukkit.util.Vector;
  *
  * @author andre
  */
-public class WaterPathDB extends DBSet<WaterPathItem> {
-    protected World fWorld;
+public class WaterPathDB extends DBSetWorld<WaterPathItem> {
     protected double fMaxLinkDistance = 8000.0f;
     
     public WaterPathDB(World aWorld, File aFile) {
-        super(WaterPathItem.class, aFile);
-        fWorld = aWorld;
+        super(WaterPathItem.class, aFile, aWorld);
     }
     
-    public void setMaxKinkDistance(double aValue) {
+    public void setMaxLinkDistance(double aValue) {
         fMaxLinkDistance = aValue;
     }
     
@@ -156,7 +157,7 @@ public class WaterPathDB extends DBSet<WaterPathItem> {
                     for(BlockPosition lPos : new WorldLineWalk(aItem.way_red_position, lItem.way_red_position)) {
                         //Logger.getLogger("updateLinks").info(lPos.toString());
                         if (lFirst) lFirst = false; else {
-                            Material lMat = lPos.getBlockType(fWorld);
+                            Material lMat = lPos.getBlockType(world);
                             if (!(lMat.equals(Material.WATER) || lMat.equals(Material.STATIONARY_WATER))) {
                                 Logger.getLogger("updateLinks").info("red blocked by " + lMat);
                                 lRedWaterline = false;
@@ -173,7 +174,7 @@ public class WaterPathDB extends DBSet<WaterPathItem> {
                     lFirst = true;
                     for(BlockPosition lPos : new WorldLineWalk(aItem.way_green_position, lItem.way_green_position)) {
                         if (lFirst) lFirst = false; else {
-                            Material lMat = lPos.getBlockType(fWorld);
+                            Material lMat = lPos.getBlockType(world);
                             if (!(lMat.equals(Material.WATER) || lMat.equals(Material.STATIONARY_WATER))) {
                                 Logger.getLogger("updateLinks").info("green blocked by " + lMat);
                                 //fWorld.getBlockAt(lPos.x, lPos.y + 1, lPos.z).setTypeId(Material.TORCH.getId());

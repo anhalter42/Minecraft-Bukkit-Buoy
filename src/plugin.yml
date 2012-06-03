@@ -2,7 +2,7 @@
 name: Buoy
 main: com.mahn42.anhalter42.buoy.BuoyMain
 version: 0.41
-##depend: [dynmap]
+depend: [MAHN42-Framework]
 commands:
    buoy_list:
       description: List all buoys in the current world.

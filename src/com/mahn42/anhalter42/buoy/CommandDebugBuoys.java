@@ -4,6 +4,8 @@
  */
 package com.mahn42.anhalter42.buoy;
 
+import com.mahn42.framework.BlockPosition;
+import com.mahn42.framework.WorldLineWalk;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;

@@ -4,6 +4,8 @@
  */
 package com.mahn42.anhalter42.buoy;
 
+import com.mahn42.framework.BlockPosition;
+import com.mahn42.framework.DBRecordWorld;
 import java.util.ArrayList;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,7 +17,7 @@ import org.bukkit.util.Vector;
  *
  * @author andre
  */
-public class WaterPathItem extends DBRecord {
+public class WaterPathItem extends DBRecordWorld {
     
     public BlockPosition red_position;
     public BlockPosition green_position;
