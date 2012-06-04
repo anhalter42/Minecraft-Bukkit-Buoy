@@ -148,28 +148,21 @@ public class WaterPathItem extends DBRecordWorld {
                     (red_position.y + green_position.y) / 2,
                     (red_position.z + green_position.z) / 2
                 );
-        way_red_position = new BlockPosition(
-                    (red_position.x + mid_position.x) / 2,
-                    (red_position.y + mid_position.y) / 2,
-                    (red_position.z + mid_position.z) / 2
-                );
-        //little bit more to the middle
-        way_red_position = new BlockPosition(
-                    (way_red_position.x + mid_position.x) / 2,
-                    (way_red_position.y + mid_position.y) / 2,
-                    (way_red_position.z + mid_position.z) / 2
-                );
-        way_green_position = new BlockPosition(
-                    (green_position.x + mid_position.x) / 2,
-                    (green_position.y + mid_position.y) / 2,
-                    (green_position.z + mid_position.z) / 2
-                );
-        //little bit more to the middle
-        way_green_position = new BlockPosition(
-                    (way_green_position.x + mid_position.x) / 2,
-                    (way_green_position.y + mid_position.y) / 2,
-                    (way_green_position.z + mid_position.z) / 2
-                );
+        if (red_position.distance(green_position) < 4.0f) {
+            way_red_position.cloneFrom(mid_position);
+            way_green_position.cloneFrom(mid_position);
+        } else {
+            way_red_position = new BlockPosition(
+                        Math.round((((red_position.x + mid_position.x) / 2) + mid_position.x) / 2),
+                        Math.round((((red_position.y + mid_position.y) / 2) + mid_position.y) / 2),
+                        Math.round((((red_position.z + mid_position.z) / 2) + mid_position.z) / 2)
+                    );
+            way_green_position = new BlockPosition(
+                        Math.round((((green_position.x + mid_position.x) / 2) + mid_position.x) / 2),
+                        Math.round((((green_position.y + mid_position.y) / 2) + mid_position.y) / 2),
+                        Math.round((((green_position.z + mid_position.z) / 2) + mid_position.z) / 2)
+                    );
+        }
     }
     
     public void updateSwapRedGreen(World aWorld) {
