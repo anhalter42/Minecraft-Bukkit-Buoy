@@ -124,4 +124,4 @@ Development
 
 Es wird bukkit.jar im Ordner ../libs benötigt.
 Zum Compilieren wird zusätzlich die dynmap-api.jar vom Projekt dynmap benötigt und in den Ordner ../libs als dynmap-api.jar gelegt.
-
+Es wird das Plugin MAHN42-Framework benötigt.
