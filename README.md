@@ -107,17 +107,17 @@ Konfiguration
 -------------
 
 Folgende Einstellungen können in der config.yml vorgenommen werden:
-AirBeatY: 2                     die Höhe in die mindestens geschlagen werden muss, damit es als Fahrschlag gilt
-MaxDistanceForTravel: 80        Maximale Distanz die nach einer Boje gescannt wird um zu fahren
-MaxAngleForTravel: 45           Maximale Winkel der gescannt wird zum Fahren
-MaxDistanceSetDestination: 80   Maximale Distanz der Suche nach Bojen, welche als nächstes Ziel eingetragen werden sollen
-MaxAngleSetDestination: 30      Maximaler Winkel bei der Suche nach Bojen für das nächste Ziel
-TicksBoatDriver: 10             Aller wieviel Ticks soll das Boot ausgerichtet werden zum Ziel (asynchron)
-TicksBoatAutomatic: 10          Aller wieviel Ticks wird synchron das Boot ausgerichtet
-MaxBuoyDistance: 60             Bis zu welcher Entfernung wird nach der passenden Boje gesucht (Rot<->Grün)
-RedBouyColor: 14                Farbe der Wolle für den "roten" Weg
-GreenBouyColor: 13              Farbe der Wolle für den "grünen" Weg
-TicksDBSave: 18000              aller wieviel Ticks soll die Bojendatenbank gespeichert werden?
+- AirBeatY: 2                     die Höhe in die mindestens geschlagen werden muss, damit es als Fahrschlag gilt
+- MaxDistanceForTravel: 80        Maximale Distanz die nach einer Boje gescannt wird um zu fahren
+- MaxAngleForTravel: 45           Maximale Winkel der gescannt wird zum Fahren
+- MaxDistanceSetDestination: 80   Maximale Distanz der Suche nach Bojen, welche als nächstes Ziel eingetragen werden sollen
+- MaxAngleSetDestination: 30      Maximaler Winkel bei der Suche nach Bojen für das nächste Ziel
+- TicksBoatDriver: 10             Aller wieviel Ticks soll das Boot ausgerichtet werden zum Ziel (asynchron)
+- TicksBoatAutomatic: 10          Aller wieviel Ticks wird synchron das Boot ausgerichtet
+- MaxBuoyDistance: 60             Bis zu welcher Entfernung wird nach der passenden Boje gesucht (Rot<->Grün)
+- RedBouyColor: 14                Farbe der Wolle für den "roten" Weg
+- GreenBouyColor: 13              Farbe der Wolle für den "grünen" Weg
+- TicksDBSave: 18000              aller wieviel Ticks soll die Bojendatenbank gespeichert werden?
 
 Development
 ===========
