@@ -56,10 +56,10 @@ public class BoatDriver implements Runnable {
                     Vector lGreenVector = fDestination.green_position.getVector().subtract(lPos);
                     if ((lRedVector.angle(fStartVector) < lGreenVector.angle(fStartVector) && !lRedEmpty) || lGreenEmpty) {
                         fSide = Side.Red;
-                        sendPlayer("Lets travel the red way.");
+                        sendPlayer("Let's travel the red way.");
                     } else {
                         fSide = Side.Green;
-                        sendPlayer("Lets travel the green way.");
+                        sendPlayer("Let's travel the green way.");
                     }
                     fStart = false;
                 }
@@ -87,100 +87,124 @@ public class BoatDriver implements Runnable {
                     lVec.multiply(lFactor * fSpeedFactor);
                     plugin.setBoatVelocity(fBoat, lVec);
                 } else {
-                    if (fLastItem != null && fSide == Side.Red &&
-                            ((fDestination.red_links.isEmpty())
-                            || (fDestination.red_links.size() == 1 && fDestination.red_links.contains(fLastItem.key)) )) {
-                        sendPlayer("No more destinations.");
-                        deactivate();
-                    } else if (fLastItem != null && fSide == Side.Green &&
-                            ((fDestination.green_links.isEmpty())
-                            || (fDestination.green_links.size() == 1 && fDestination.green_links.contains(fLastItem.key)) )) {
-                        sendPlayer("No more destinations.");
-                        deactivate();
-                    } else {
-                        WaterPathItem lNextDestination = null;
-                        WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
-                        if (fLastItem != null) {
-                            if (fSide == Side.Red) {
-                                if (fDestination.red_links.size() > 2) {
-                                    sendPlayer("To many destinations.");
-                                    deactivate(); // to many destinations
-                                } else {
-                                    for(String lKey : fDestination.red_links) {
-                                        if (!lKey.equals(fLastItem.key)) {
-                                            lNextDestination = lDB.getRecord(lKey);
-                                            break;
-                                        }
-                                    }
-                                }
-                            } else {
-                                if (fDestination.green_links.size() > 2) {
-                                    sendPlayer("To many destinations.");
-                                    deactivate(); // to many destinations
-                                } else {
-                                    for(String lKey : fDestination.green_links) {
-                                        if (!lKey.equals(fLastItem.key)) {
-                                            lNextDestination = lDB.getRecord(lKey);
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            // fStartVector holds the direction
-                            if (fSide == Side.Red) {
-                                WaterPathItem lNewItem = null;
-                                double lMinAngle = Double.MAX_VALUE;
-                                for(String lKey : fDestination.red_links) {
-                                    WaterPathItem lItem = lDB.getRecord(lKey);
-                                    if (lItem != null) {
-                                        Vector lVector = lItem.red_position.getVector().subtract(fDestination.red_position.getVector());
-                                        double lAngle = lVector.angle(fStartVector);
-                                        if (lAngle < lMinAngle) {
-                                            lMinAngle = lAngle;
-                                            lNewItem = lItem;
-                                        }
-                                    }
-                                }
-                                lNextDestination = lNewItem;
-                            } else {
-                                WaterPathItem lNewItem = null;
-                                double lMinAngle = Double.MAX_VALUE;
-                                for(String lKey : fDestination.green_links) {
-                                    WaterPathItem lItem = lDB.getRecord(lKey);
-                                    if (lItem != null) {
-                                        Vector lVector = lItem.green_position.getVector().subtract(fDestination.green_position.getVector());
-                                        double lAngle = lVector.angle(fStartVector);
-                                        if (lAngle < lMinAngle) {
-                                            lMinAngle = lAngle;
-                                            lNewItem = lItem;
-                                        }
-                                    }
-                                }
-                                lNextDestination = lNewItem;
-                            }
-                        }
+                    WaterPathItem lNextDestination = getNextDestination(true);
+                    if (lNextDestination != null) {
+                        fLastItem = fDestination;
+                        fDestination = lNextDestination;
                         if (lNextDestination != null) {
-                            fLastItem = fDestination;
-                            fDestination = lNextDestination;
-                            plugin.getLogger().info(fDestination.toString());
-                            if (fDestination.swapRedToGreen && fSide == Side.Red) {
-                                sendPlayer("Now lets travel the green way.");
-                                fSide = Side.Green;
-                            } else if (fDestination.swapGreenToRed && fSide == Side.Green) {
-                                sendPlayer("Now lets travel the red way.");
-                                fSide = Side.Red;
+                            if (fSide == Side.Red) {
+                                if (lNextDestination.red_links.contains(fLastItem.key)
+                                        //&& fLastItem.green_links.isEmpty()
+                                        //&& lNextDestination.green_links.isEmpty()
+                                        ) {
+                                    fSide = Side.Green;
+                                    sendPlayer("Now let's travel the green way.");
+                                }
+                            } else {
+                                if (lNextDestination.green_links.contains(fLastItem.key)
+                                        //&& fLastItem.red_links.isEmpty()
+                                        //&& lNextDestination.red_links.isEmpty()
+                                        ) {
+                                    fSide = Side.Red;
+                                    sendPlayer("Now let's travel the red way.");
+                                }
                             }
-                        } else {
-                            sendPlayer("No next destination.");
-                            deactivate();
                         }
+                    } else {
+                        sendPlayer("Travel stopped.");
+                        deactivate();
                     }
                 }
             } finally {
                 fInRun = false;
             }
         }
+    }
+    
+    protected WaterPathItem getNextDestination(boolean lExecute) {
+        WaterPathItem lNextDestination = null;
+        World lWorld = fBoat.getWorld();
+        //Vector lPos = fBoat.getLocation().toVector();
+        
+        if (fLastItem != null && fSide == Side.Red &&
+                ((fDestination.red_links.isEmpty())
+                || (fDestination.red_links.size() == 1 && fDestination.red_links.contains(fLastItem.key)) )) {
+            if (lExecute) {
+                //sendPlayer("No more destinations.");
+                deactivate();
+            }
+        } else if (fLastItem != null && fSide == Side.Green &&
+                ((fDestination.green_links.isEmpty())
+                || (fDestination.green_links.size() == 1 && fDestination.green_links.contains(fLastItem.key)) )) {
+            if (lExecute) {
+                //sendPlayer("No more destinations.");
+                deactivate();
+            }
+        } else {
+            WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
+            if (fLastItem != null) {
+                if (   (fSide == Side.Red && fDestination.red_links.size() > 2)
+                    || (fSide == Side.Green && fDestination.green_links.size() > 2)) {
+                    if (lExecute) {
+                        //sendPlayer("To many destinations.");
+                        deactivate(); // to many destinations
+                    }
+                }
+                WaterPathItem lRed = null;
+                for(String lKey : fDestination.red_links) {
+                    if (!lKey.equals(fLastItem.key)) {
+                        lRed = lDB.getRecord(lKey);
+                        break;
+                    }
+                }
+                WaterPathItem lGreen = null;
+                for(String lKey : fDestination.green_links) {
+                    if (!lKey.equals(fLastItem.key)) {
+                        lGreen = lDB.getRecord(lKey);
+                        break;
+                    }
+                }
+                if (fSide == Side.Red && lRed != null) {
+                    lNextDestination = lRed;
+                } else if (fSide == Side.Green && lGreen != null) {
+                    lNextDestination = lGreen;
+                }
+            } else {
+                // fStartVector holds the direction
+                if (fSide == Side.Red) {
+                    WaterPathItem lNewItem = null;
+                    double lMinAngle = Double.MAX_VALUE;
+                    for(String lKey : fDestination.red_links) {
+                        WaterPathItem lItem = lDB.getRecord(lKey);
+                        if (lItem != null) {
+                            Vector lVector = lItem.red_position.getVector().subtract(fDestination.red_position.getVector());
+                            double lAngle = lVector.angle(fStartVector);
+                            if (lAngle < lMinAngle) {
+                                lMinAngle = lAngle;
+                                lNewItem = lItem;
+                            }
+                        }
+                    }
+                    lNextDestination = lNewItem;
+                } else {
+                    WaterPathItem lNewItem = null;
+                    double lMinAngle = Double.MAX_VALUE;
+                    for(String lKey : fDestination.green_links) {
+                        WaterPathItem lItem = lDB.getRecord(lKey);
+                        if (lItem != null) {
+                            Vector lVector = lItem.green_position.getVector().subtract(fDestination.green_position.getVector());
+                            double lAngle = lVector.angle(fStartVector);
+                            if (lAngle < lMinAngle) {
+                                lMinAngle = lAngle;
+                                lNewItem = lItem;
+                            }
+                        }
+                    }
+                    lNextDestination = lNewItem;
+                }
+            }
+        }
+        return lNextDestination;
     }
     
     protected void deactivate() {

@@ -6,7 +6,6 @@ package com.mahn42.anhalter42.buoy;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Set;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Boat;
@@ -19,7 +18,10 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 import org.dynmap.DynmapAPI;
-import org.dynmap.markers.*;
+import org.dynmap.markers.CircleMarker;
+import org.dynmap.markers.MarkerAPI;
+import org.dynmap.markers.MarkerSet;
+import org.dynmap.markers.PolyLineMarker;
 /**
  *
  * @author andre
