@@ -70,6 +70,7 @@ public class BuoyMain extends JavaPlugin {
     public byte configRedBouyColor = 14;
     public byte configGreenBouyColor = 13;
     public int configTicksDBSave = 100;
+    public long configLeverTicks = 20;
     
     protected HashMap<String, WaterPathDB> fWaterPathDBs;
     protected BoatAutomatic fBoatAutomatic;
@@ -263,5 +264,6 @@ public class BuoyMain extends JavaPlugin {
         configRedBouyColor = (byte) lConfig.getInt("RedBouyColor");
         configGreenBouyColor = (byte) lConfig.getInt("GreenBouyColor");
         configTicksDBSave = lConfig.getInt("TicksDBSave");
+        configLeverTicks = lConfig.getLong("LeverTicks");
     }
 }

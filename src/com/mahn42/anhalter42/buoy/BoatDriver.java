@@ -7,6 +7,7 @@ package com.mahn42.anhalter42.buoy;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -87,6 +88,12 @@ public class BoatDriver implements Runnable {
                     lVec.multiply(lFactor * fSpeedFactor);
                     plugin.setBoatVelocity(fBoat, lVec);
                 } else {
+                    if (fLastItem != null) {
+                        triggerLevers(fLastItem);
+                    }
+                    if (fDestination != null) {
+                        triggerLevers(fDestination);
+                    }
                     WaterPathItem lNextDestination = getNextDestination(true);
                     if (lNextDestination != null) {
                         fLastItem = fDestination;
@@ -118,6 +125,22 @@ public class BoatDriver implements Runnable {
             } finally {
                 fInRun = false;
             }
+        }
+    }
+    
+    protected void triggerLevers(WaterPathItem aItem) {
+        triggerLevers(aItem.green_position.getBlockAt(fBoat.getWorld(), 0, 1, 0));
+        triggerLevers(aItem.red_position.getBlockAt(fBoat.getWorld(), 0, 1, 0));
+    }
+
+    protected void triggerLevers(Block aBlock) {
+        Material lMat = aBlock.getType();
+        if (lMat.equals(Material.LEVER)) {
+            aBlock.setData((byte)(aBlock.getData() ^ 0x08));
+            plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new TriggerLever(aBlock), plugin.configLeverTicks);
+        } else if (lMat.equals(Material.STONE_BUTTON)) {
+            aBlock.setData((byte)(aBlock.getData() ^ 0x08));
+            plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new TriggerLever(aBlock), plugin.configLeverTicks);
         }
     }
     
@@ -208,6 +231,9 @@ public class BoatDriver implements Runnable {
     }
     
     protected void deactivate() {
+        if (fLastItem != null) {
+            triggerLevers(fLastItem);
+        }
         plugin.deactivateBoatMovement(fBoat);
         //plugin.getLogger().info("boat stopped.");
     }
