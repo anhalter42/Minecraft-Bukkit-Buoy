@@ -88,23 +88,31 @@ Kommandos
 * buoy_list   listet alle Bojenpaare der aktuellen Welt auf
 * buoy_remove entfernt die Definition der Bojenpaare der aktuellen Welt des Spielers
 
+Trivia
+------
+
+Wird die rote oder grüne Wolle entfernt, so wird auch die Definition der Boje zerstört. 
+
 Geplantes
 ---------
 
 Mit Redstone Fackeln sollen Gabelungen geschalten werden können.
+
+Nutzung anderer Plugins
+=======================
+
+Mahn42-Framework
+----------------
+
+Es wird das Plugin Mahn42-Framework benötigt.
 
 Dynmap
 ------
 
 Ist Dynmap installiert, werden die Schifffahrtswege in einer eigenen Ebene visualisiert.
 
-Trivia
-------
-
-Wird die rote oder grüne Wolle entfernt, so wird auch die Definition der Boje zerstört. 
-
 Konfiguration
--------------
+=============
 
 Folgende Einstellungen können in der config.yml vorgenommen werden:
 - AirBeatY: 2                     die Höhe in die mindestens geschlagen werden muss, damit es als Fahrschlag gilt
@@ -124,4 +132,4 @@ Development
 
 Es wird bukkit.jar im Ordner ../libs benötigt.
 Zum Compilieren wird zusätzlich die dynmap-api.jar vom Projekt dynmap benötigt und in den Ordner ../libs als dynmap-api.jar gelegt.
-
+Es wird das Plugin Mahn42-Framework benötigt.
