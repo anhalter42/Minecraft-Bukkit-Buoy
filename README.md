@@ -65,22 +65,29 @@ Korrekturen
 Zieldefinitionen der Bojen können gelöscht werden. Dazu geht man in den Schleichenmodus (Sneak, Umschalttaste)
 und schlägt (Rechtsclick) auf den Wolleblock. 
 
-Besondere Bojen
----------------
+Probleme mit Rot/Grün Bojen
+---------------------------
 
-Stößt ein Rot/Grün Weg auf einen Grün/Rot Weg kann der Weg nicht automatisch fortgesetzt werden.
+Stößt ein Rot/Grün Weg auf einen Grün/Rot Weg kann es Probleme geben. 
 
 R---->R      G---->G
 
 G<----G      R<----R
 
-Um das Problem zu lösen kann an der jeweiligen Boje ein gelber Block Wolle positioniert werden.
-Wird neben der roten Boje eine gelber Wollblock gesetzt so wird vom "roten" Weg auf den grünen Weg gewechselt.
-Umgekehrt gilt dies für die grüne Boje.
+Um das Problem zu lösen kann die Verbindung gekreuzt werden.
 
-R---->R---->GY---->G
+R---->R---->G---->G
 
-G<----GY<----R<----R
+G<----G<----R<----R
+
+Hier von Rot zu Rot und wieder zurück. Dadurch wird automatisch ein "Seitenwechsel" durchgeführt.
+Man kommt also von Rot und wechselt auf Grün.
+
+Schalter
+--------
+
+Fährt man mit einem Boot auf den Schiffahrtswegen,
+so wird beim Erreichen eines Bojenpaars ein auf den Bojen plazierter Schalter für eine definierte Zeit geschaltet.
 
 Kommandos
 ---------
