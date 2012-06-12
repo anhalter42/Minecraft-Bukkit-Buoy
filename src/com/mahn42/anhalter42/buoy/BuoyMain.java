@@ -4,6 +4,8 @@
  */
 package com.mahn42.anhalter42.buoy;
 
+import com.mahn42.framework.Framework;
+import com.mahn42.framework.WorldDBList;
 import java.io.File;
 import java.util.HashMap;
 import org.bukkit.World;
@@ -27,19 +29,6 @@ import org.dynmap.markers.PolyLineMarker;
  * @author andre
  */
 public class BuoyMain extends JavaPlugin {
-
-    private static class DBSaver implements Runnable {
-
-        BuoyMain plugin;
-        public DBSaver(BuoyMain aPlugin) {
-            plugin = aPlugin;
-        }
-
-        @Override
-        public void run() {
-            plugin.saveDB();
-        }
-    }
 
     /*
 		colors.put("orange",1);
@@ -72,7 +61,7 @@ public class BuoyMain extends JavaPlugin {
     public int configTicksDBSave = 100;
     public long configLeverTicks = 20;
     
-    protected HashMap<String, WaterPathDB> fWaterPathDBs;
+    protected WorldDBList<WaterPathDB> fWaterPathDBs;
     protected BoatAutomatic fBoatAutomatic;
     protected HashMap<Boat, BoatDriver> fBoatDrivers;
     
@@ -103,6 +92,8 @@ public class BuoyMain extends JavaPlugin {
     @Override
     public void onEnable() {
         readBuoyConfig();
+        fWaterPathDBs = new WorldDBList<WaterPathDB>(WaterPathDB.class, this);
+        Framework.plugin.registerSaver(fWaterPathDBs);
         fBoatAutomatic = new BoatAutomatic(this);
         fBoatDrivers = new HashMap<Boat, BoatDriver>();
         getCommand("buoy_list").setExecutor(new CommandListBuoys(this));
@@ -114,7 +105,6 @@ public class BuoyMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(new BlockListener(this), this);
         getServer().getScheduler().scheduleSyncRepeatingTask(this, fBoatAutomatic, 10, configTicksBoatAutomatic);
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, new DBSaver(this), 10, configTicksDBSave);
 
         PluginManager pm = getServer().getPluginManager();
         /* Get dynmap */
@@ -191,38 +181,10 @@ public class BuoyMain extends JavaPlugin {
     
     @Override
     public void onDisable() { 
-        saveDB();
     }
     
-    public void saveDB() { 
-        if (fWaterPathDBs != null) {
-            getLogger().info("Saving DBs...");
-            for(WaterPathDB lDB : fWaterPathDBs.values()) {
-                lDB.save();
-            }
-        }
-    }
-
     public WaterPathDB getWaterPathDB(String aWorldName) {
-        if (fWaterPathDBs == null) {
-            fWaterPathDBs = new HashMap<String, WaterPathDB>();
-        }
-        if (!fWaterPathDBs.containsKey(aWorldName)) {
-            World lWorld = getServer().getWorld(aWorldName);
-            File lFolder = getDataFolder();
-            //File lFolder = lWorld.getWorldFolder();
-            if (!lFolder.exists()) {
-                lFolder.mkdirs();
-            }
-            String lPath = lFolder.getPath();
-            lPath = lPath + File.separatorChar + aWorldName + "_buoy.csv";
-            File lFile = new File(lPath);
-            WaterPathDB lDB = new WaterPathDB(lWorld, lFile);
-            lDB.load();
-            getLogger().info("Datafile " + lFile.toString() + " loaded. (Records:" + new Integer(lDB.size()).toString() + ")");
-            fWaterPathDBs.put(aWorldName, lDB);
-        }
-        return fWaterPathDBs.get(aWorldName);
+        return fWaterPathDBs.getDB(aWorldName);
     }
     
     public void setBoatVelocity(Boat aBoat, Vector aVelocity) {

@@ -22,6 +22,10 @@ import org.bukkit.util.Vector;
 public class WaterPathDB extends DBSetWorld<WaterPathItem> {
     protected double fMaxLinkDistance = 8000.0f;
     
+    public WaterPathDB() {
+        super(WaterPathItem.class);
+    }
+    
     public WaterPathDB(World aWorld, File aFile) {
         super(WaterPathItem.class, aFile, aWorld);
     }
