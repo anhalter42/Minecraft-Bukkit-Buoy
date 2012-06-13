@@ -6,9 +6,7 @@ package com.mahn42.anhalter42.buoy;
 
 import com.mahn42.framework.Framework;
 import com.mahn42.framework.WorldDBList;
-import java.io.File;
 import java.util.HashMap;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Boat;
 import org.bukkit.event.EventHandler;
@@ -135,7 +133,7 @@ public class BuoyMain extends JavaPlugin {
                     return;
                 }
             //}
-            getLogger().info("update dynmap markers buoy");
+            //getLogger().info("update dynmap markers buoy");
             WaterPathDB lDB = getWaterPathDB("world");
             double[] lXs = new double[2];
             double[] lYs = new double[2];
