@@ -7,6 +7,8 @@ package com.mahn42.anhalter42.buoy;
 import com.mahn42.framework.Framework;
 import com.mahn42.framework.WorldDBList;
 import java.util.HashMap;
+import java.util.List;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Boat;
 import org.bukkit.event.EventHandler;
@@ -134,42 +136,45 @@ public class BuoyMain extends JavaPlugin {
                 }
             //}
             //getLogger().info("update dynmap markers buoy");
-            WaterPathDB lDB = getWaterPathDB("world");
-            double[] lXs = new double[2];
-            double[] lYs = new double[2];
-            double[] lZs = new double[2];
-            for(WaterPathItem lItem : lDB) {
-                if (lItem.red_links.isEmpty() && lItem.green_links.isEmpty()) {
-                    CircleMarker lMarker = lMarkerSet.createCircleMarker(lItem.key, "", true, "world", lItem.mid_position.x, lItem.mid_position.y, lItem.mid_position.z, 3, 3, false);
-                    if (lMarker != null)
-                        lMarker.setLineStyle(1, 0.75f, 0xFF8080);
-                } else {
-                    lXs[0] = lItem.way_red_position.x;
-                    lYs[0] = lItem.way_red_position.y;
-                    lZs[0] = lItem.way_red_position.z;
-                    for(String lKey : lItem.red_links) {
-                        WaterPathItem lNextItem = lDB.getRecord(lKey);
-                        if (lNextItem != null) {
-                            lXs[1] = lNextItem.way_red_position.x;
-                            lYs[1] = lNextItem.way_red_position.y;
-                            lZs[1] = lNextItem.way_red_position.z;
-                            PolyLineMarker lLine = lMarkerSet.createPolyLineMarker(lItem.key+lKey, "", true, "world", lXs, lYs, lZs, false);
-                            if (lLine != null)
-                                lLine.setLineStyle(1, 0.75, 0xF04040);
+            List<World> lWorlds = getServer().getWorlds();
+            for(World lWorld : lWorlds) {
+                WaterPathDB lDB = fWaterPathDBs.getDB(lWorld); // getWaterPathDB("world");
+                double[] lXs = new double[2];
+                double[] lYs = new double[2];
+                double[] lZs = new double[2];
+                for(WaterPathItem lItem : lDB) {
+                    if (lItem.red_links.isEmpty() && lItem.green_links.isEmpty()) {
+                        CircleMarker lMarker = lMarkerSet.createCircleMarker(lItem.key, "", true, lWorld.getName(), lItem.mid_position.x, lItem.mid_position.y, lItem.mid_position.z, 3, 3, false);
+                        if (lMarker != null)
+                            lMarker.setLineStyle(1, 0.75f, 0xFF8080);
+                    } else {
+                        lXs[0] = lItem.way_red_position.x;
+                        lYs[0] = lItem.way_red_position.y;
+                        lZs[0] = lItem.way_red_position.z;
+                        for(String lKey : lItem.red_links) {
+                            WaterPathItem lNextItem = lDB.getRecord(lKey);
+                            if (lNextItem != null) {
+                                lXs[1] = lNextItem.way_red_position.x;
+                                lYs[1] = lNextItem.way_red_position.y;
+                                lZs[1] = lNextItem.way_red_position.z;
+                                PolyLineMarker lLine = lMarkerSet.createPolyLineMarker(lItem.key+lKey, "", true, lWorld.getName(), lXs, lYs, lZs, false);
+                                if (lLine != null)
+                                    lLine.setLineStyle(1, 0.75, 0xF04040);
+                            }
                         }
-                    }
-                    lXs[0] = lItem.way_green_position.x;
-                    lYs[0] = lItem.way_green_position.y;
-                    lZs[0] = lItem.way_green_position.z;
-                    for(String lKey : lItem.green_links) {
-                        WaterPathItem lNextItem = lDB.getRecord(lKey);
-                        if (lNextItem != null) {
-                            lXs[1] = lNextItem.way_green_position.x;
-                            lYs[1] = lNextItem.way_green_position.y;
-                            lZs[1] = lNextItem.way_green_position.z;
-                            PolyLineMarker lLine = lMarkerSet.createPolyLineMarker(lItem.key+lKey, "", true, "world", lXs, lYs, lZs, false);
-                            if (lLine != null)
-                                lLine.setLineStyle(1, 0.75f, 0x40F040);
+                        lXs[0] = lItem.way_green_position.x;
+                        lYs[0] = lItem.way_green_position.y;
+                        lZs[0] = lItem.way_green_position.z;
+                        for(String lKey : lItem.green_links) {
+                            WaterPathItem lNextItem = lDB.getRecord(lKey);
+                            if (lNextItem != null) {
+                                lXs[1] = lNextItem.way_green_position.x;
+                                lYs[1] = lNextItem.way_green_position.y;
+                                lZs[1] = lNextItem.way_green_position.z;
+                                PolyLineMarker lLine = lMarkerSet.createPolyLineMarker(lItem.key+lKey, "", true, lWorld.getName(), lXs, lYs, lZs, false);
+                                if (lLine != null)
+                                    lLine.setLineStyle(1, 0.75f, 0x40F040);
+                            }
                         }
                     }
                 }
