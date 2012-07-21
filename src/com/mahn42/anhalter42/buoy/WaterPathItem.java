@@ -144,11 +144,11 @@ public class WaterPathItem extends DBRecordWorld {
     
     public void calcPositions() {
         mid_position = new BlockPosition(
-                    (red_position.x + green_position.x) / 2,
-                    (red_position.y + green_position.y) / 2,
-                    (red_position.z + green_position.z) / 2
+                    Math.round((red_position.x + green_position.x) / 2),
+                    Math.round((red_position.y + green_position.y) / 2),
+                    Math.round((red_position.z + green_position.z) / 2)
                 );
-        if (red_position.distance(green_position) < 4.0f) {
+        if (red_position.distance(green_position) <= 8.0f) {
             way_red_position.cloneFrom(mid_position);
             way_green_position.cloneFrom(mid_position);
         } else {
@@ -165,7 +165,7 @@ public class WaterPathItem extends DBRecordWorld {
         }
     }
     
-    public void updateSwapRedGreen(World aWorld) {
+/*    public void updateSwapRedGreen(World aWorld) {
         swapRedToGreen = isSwapBlock(aWorld, red_position,  1,  0)
                       || isSwapBlock(aWorld, red_position, -1,  0)
                       || isSwapBlock(aWorld, red_position,  0,  1)
@@ -179,7 +179,7 @@ public class WaterPathItem extends DBRecordWorld {
     protected boolean isSwapBlock(World aWorld, BlockPosition aPos, int aDX, int aDZ) {
         Block lBlock = aPos.getLocation(aWorld).add(aDX, 0, aDZ).getBlock();
         return lBlock.getType().equals(Material.WOOL) && lBlock.getData() == 4; // yellow
-    }
+    }*/
     
     public Vector getVector() {
         return mid_position.getVector();
