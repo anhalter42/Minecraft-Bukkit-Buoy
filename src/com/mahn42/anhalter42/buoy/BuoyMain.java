@@ -159,7 +159,7 @@ public class BuoyMain extends JavaPlugin {
                                 lZs[1] = lNextItem.way_red_position.z;
                                 PolyLineMarker lLine = lMarkerSet.createPolyLineMarker(lItem.key+lKey, "", true, lWorld.getName(), lXs, lYs, lZs, false);
                                 if (lLine != null)
-                                    lLine.setLineStyle(1, 0.75, 0xF04040);
+                                    lLine.setLineStyle(1, 0.75f, 0xF04040);
                             }
                         }
                         lXs[0] = lItem.way_green_position.x;

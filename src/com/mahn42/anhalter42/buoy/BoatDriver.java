@@ -129,8 +129,11 @@ public class BoatDriver implements Runnable {
     }
     
     protected void triggerLevers(WaterPathItem aItem) {
-        triggerLevers(aItem.green_position.getBlockAt(fBoat.getWorld(), 0, 1, 0));
-        triggerLevers(aItem.red_position.getBlockAt(fBoat.getWorld(), 0, 1, 0));
+        if (fSide == Side.Red) {
+            triggerLevers(aItem.red_position.getBlockAt(fBoat.getWorld(), 0, 1, 0));
+        } else {
+            triggerLevers(aItem.green_position.getBlockAt(fBoat.getWorld(), 0, 1, 0));
+        }
     }
 
     protected void triggerLevers(Block aBlock) {
