@@ -33,7 +33,7 @@ public class BlockListener implements Listener {
                 WaterPathItem lBuoy = lDB.getItemAt(lBlock.getLocation());
                 while (lBuoy != null) {
                     lDB.remove(lBuoy);
-                    aEvent.getPlayer().sendMessage("Buoy is destroyed.");
+                    aEvent.getPlayer().sendMessage(BuoyMain.plugin.getText(aEvent.getPlayer(), "Buoy is destroyed."));
                     lBuoy = lDB.getItemAt(lBlock.getLocation());
                     lFound = true;
                 }

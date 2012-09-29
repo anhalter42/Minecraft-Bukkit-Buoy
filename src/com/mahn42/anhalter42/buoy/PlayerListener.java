@@ -68,14 +68,14 @@ public class PlayerListener implements Listener {
                                 if (lBuoy != null) {
                                     if (lColor == plugin.configRedBouyColor) { // red
                                         lBuoy.red_links.clear();
-                                        lPlayer.sendMessage("Clearing red destinations!");
+                                        lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "Clearing red destinations!"));
                                     } else { // green
                                         lBuoy.green_links.clear();
-                                        lPlayer.sendMessage("Clearing green destinations!");
+                                        lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "Clearing green destinations!"));
                                     }
                                     plugin.updateDynMapBuoy();
                                 } else {
-                                    lPlayer.sendMessage("No buoy for clearing destinations!");
+                                    lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "No buoy for clearing destinations!"));
                                 }
                             }
                         }
@@ -101,7 +101,7 @@ public class PlayerListener implements Listener {
                     if ((lBlock != null) && (lBlock.getY() > (lPlayer.getLocation().getBlockY() + plugin.configAirBeatY))) { // schlag in die luft
                         if (plugin.isBoatTraveling(lBoat)) {
                             plugin.deactivateBoatMovement(lBoat);
-                            lPlayer.sendMessage("Travel stopped!");
+                            lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "Travel stopped!"));
                         } else {
                             Vector lVector = new Vector(lBlock.getX() - lLocation.getBlockX(), lBlock.getY() - lLocation.getBlockY(), lBlock.getZ() - lLocation.getBlockZ());
                             ArrayList<WaterPathItem> lBuoys = lDB.getItemNearlyDirection(lLocation, plugin.configMaxDistanceForTravel, lVector, 0.0f, (float) ((plugin.configMaxAngleForTravel * Math.PI) / 180.0f));
@@ -111,7 +111,7 @@ public class PlayerListener implements Listener {
                                     break;
                                 }
                             } else {
-                                lPlayer.sendMessage("No buoy found in this direction!");
+                                lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "No buoy found in this direction!"));
                             }
                         }
                     }
@@ -134,7 +134,7 @@ public class PlayerListener implements Listener {
                                         ArrayList<WaterPathItem> lBuoys = lDB.getItemNearlyDirection(lLoc, plugin.configMaxDistanceSetDestination, lVector, 0.0f, (float) ((plugin.configMaxAngleSetDestination * Math.PI) / 180.0f) );
                                         if (lBuoys.size() > 0) {
                                             for(WaterPathItem lItem : lBuoys) {
-                                                lPlayer.sendMessage("Next buoy marked as destination.");
+                                                lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "Next buoy marked as destination."));
                                                 if (lColor == plugin.configRedBouyColor) { // red
                                                     if (!lBuoy.red_links.contains(lItem.key)) lBuoy.red_links.add(lItem.key);
                                                 } else { // green
@@ -144,7 +144,7 @@ public class PlayerListener implements Listener {
                                                 break;
                                             }
                                         } else {
-                                            lPlayer.sendMessage("No buoy found in this direction!");
+                                            lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "No buoy found in this direction!"));
                                         }
                                     }
                                 }

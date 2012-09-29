@@ -9,6 +9,7 @@ import com.mahn42.framework.WorldDBList;
 import java.util.HashMap;
 import java.util.List;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Boat;
 import org.bukkit.event.EventHandler;
@@ -61,6 +62,8 @@ public class BuoyMain extends JavaPlugin {
     public int configTicksDBSave = 100;
     public long configLeverTicks = 20;
     
+    public static BuoyMain plugin;
+    
     protected WorldDBList<WaterPathDB> fWaterPathDBs;
     protected BoatAutomatic fBoatAutomatic;
     protected HashMap<Boat, BoatDriver> fBoatDrivers;
@@ -91,6 +94,7 @@ public class BuoyMain extends JavaPlugin {
     
     @Override
     public void onEnable() {
+        plugin = this;
         readBuoyConfig();
         fWaterPathDBs = new WorldDBList<WaterPathDB>(WaterPathDB.class, this);
         Framework.plugin.registerSaver(fWaterPathDBs);
@@ -231,4 +235,18 @@ public class BuoyMain extends JavaPlugin {
         configTicksDBSave = lConfig.getInt("TicksDBSave");
         configLeverTicks = lConfig.getLong("LeverTicks");
     }
+
+    
+    public String getText(String aText, Object... aObjects) {
+        return getText((String)null, aText, aObjects);
+    }
+    
+    public String getText(CommandSender aPlayer, String aText, Object... aObjects) {
+        return getText(Framework.plugin.getPlayerLanguage(aPlayer.getName()), aText, aObjects);
+    }
+    
+    public String getText(String aLanguage, String aText, Object... aObjects) {
+        return Framework.plugin.getText(this, aLanguage, aText, aObjects);
+    }
+
 }

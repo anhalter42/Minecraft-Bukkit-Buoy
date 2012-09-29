@@ -46,7 +46,7 @@ public class BuoyFinder implements Runnable {
             //lItem.updateSwapRedGreen(lWorld);
             plugin.updateDynMapBuoy();
             //player.sendMessage((lItem.swapGreenToRed ? "GR" : "") + " " + (lItem.swapRedToGreen ? "RG" : "")) ;
-            player.sendMessage("Buoy is already active.");
+            player.sendMessage(BuoyMain.plugin.getText(player, "Buoy is already active."));
         } else {
             Block[] lBlocks = findNearestBuoy(lWorld, lLoc, plugin.configMaxBuoyDistance, null, aColor);
             if (lBlocks.length > 0) {
@@ -54,7 +54,7 @@ public class BuoyFinder implements Runnable {
                     Location lLoc2 = lBlock.getLocation();
                     lItem = lDB.getItemAt(lLoc2);
                     if (lItem != null) {
-                        player.sendMessage("Corresponding buoy is already bundled.");
+                        player.sendMessage(BuoyMain.plugin.getText(player, "Corresponding buoy is already bundled."));
                     } else {
                         boolean lWaterLine = true;
                         for(BlockPosition lPos : new WorldLineWalk(lLoc, lLoc2)) {
@@ -75,17 +75,17 @@ public class BuoyFinder implements Runnable {
                             lItem.player = player.getName();
                             //lItem.updateSwapRedGreen(lWorld);
                             lDB.addRecord(lItem);
-                            player.sendMessage("Buoy activated.");
+                            player.sendMessage(BuoyMain.plugin.getText(player, "Buoy activated."));
                             player.playEffect(lLoc, Effect.CLICK2, (byte)0);
                             plugin.updateDynMapBuoy();
                             break;
                         } else {
-                            player.sendMessage("Buoys must have a direct link with water only!");
+                            player.sendMessage(BuoyMain.plugin.getText(player, "Buoys must have a direct link with water only!"));
                         }
                     }
                 }
             } else {
-                player.sendMessage("No corresponding buoy found. You need red and green buoy.");
+                player.sendMessage(BuoyMain.plugin.getText(player, "No corresponding buoy found. You need red and green buoy."));
             }
         }
     }

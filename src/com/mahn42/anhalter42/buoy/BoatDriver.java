@@ -249,11 +249,11 @@ public class BoatDriver implements Runnable {
         return fTaskId;
     }
     
-    public void sendPlayer(String aText) {
+    public void sendPlayer(String aText, Object... aObjects) {
         Entity lPassenger = fBoat.getPassenger();
         if (lPassenger != null && lPassenger instanceof Player) {
             Player lPlayer = (Player)lPassenger;
-            lPlayer.sendMessage(aText);
+            lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, aText, aObjects));
         }
     }
 }
