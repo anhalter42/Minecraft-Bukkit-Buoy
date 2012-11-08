@@ -117,11 +117,20 @@ public class WaterPathDB extends DBSetWorld<WaterPathItem> {
         for (WaterPathItem lItem : this) {
             double lDistance = lItem.distance(aX, aY, aZ);
             if (lDistance <= aDistance) {
-                Vector lVector = new Vector(lItem.mid_position.x -aX, lItem.mid_position.y -aY, lItem.mid_position.z - aZ);
-                float lAngle = aDirection.angle(lVector);
-                if (aMinAngle <= lAngle && lAngle <= aMaxAngle) {
-                    //Logger.getLogger("xxx").info(lItem.toString() + " v " + lVector.toString() + " Angle " + lAngle);
-                    lDistances.add(new WaterPathItemDistance(lItem, lDistance));
+                Vector lVector = new Vector(lItem.mid_position.x - aX, aDirection.getBlockY(), lItem.mid_position.z - aZ);
+                boolean lx1p = lVector.getBlockX() >= 0 ? true : false;
+                boolean lz1p = lVector.getBlockZ() >= 0 ? true : false;
+                boolean lx2p = aDirection.getBlockX() >= 0 ? true : false;
+                boolean lz2p = aDirection.getBlockZ() >= 0 ? true : false;
+                int lsame = 0;
+                if ((lx1p && lx2p) || (!lx1p && !lx2p)) lsame++;
+                if ((lz1p && lz2p) || (!lz1p && !lz2p)) lsame++;
+                if (lsame >= 2) {
+                    float lAngle = aDirection.angle(lVector);
+                    Logger.getLogger("xxx").info(lItem.toString() + " v " + lVector.toString() + " Angle " + lAngle + "(" + aMinAngle + "," + aMaxAngle + ")" + " d " + aDirection.toString() + " dis " + lDistance);
+                    if (aMinAngle <= lAngle && lAngle <= aMaxAngle) {
+                        lDistances.add(new WaterPathItemDistance(lItem, lDistance));
+                    }
                 }
             }
         }

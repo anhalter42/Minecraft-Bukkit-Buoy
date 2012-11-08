@@ -5,16 +5,20 @@
 package com.mahn42.anhalter42.buoy;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Boat;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.util.Vector;
 
 /**
@@ -28,6 +32,21 @@ public class PlayerListener implements Listener {
     
     public PlayerListener(BuoyMain aPlugin) {
         plugin = aPlugin;
+    }
+    
+    @EventHandler
+    public void playerVehicle(VehicleExitEvent aEvent) {
+        LivingEntity lExited = aEvent.getExited();
+        Vehicle lVehicle = aEvent.getVehicle();
+        if (lExited instanceof Player && lVehicle instanceof Boat) {
+            Player lPlayer = (Player)lExited;
+            Boat lBoat = (Boat)lVehicle;
+            if (plugin.isBoatTraveling(lBoat)) {
+                lBoat.setVelocity(new Vector(0, 0, 0));
+                plugin.deactivateBoatMovement(lBoat);
+                lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "Travel stopped!"));
+            }
+        }
     }
     
     @EventHandler
@@ -133,15 +152,28 @@ public class PlayerListener implements Listener {
                                         Vector lVector = new Vector(lTargetBlock.getX() - lLoc.getBlockX(), lTargetBlock.getY() - lLoc.getBlockY(), lTargetBlock.getZ() - lLoc.getBlockZ());
                                         ArrayList<WaterPathItem> lBuoys = lDB.getItemNearlyDirection(lLoc, plugin.configMaxDistanceSetDestination, lVector, 0.0f, (float) ((plugin.configMaxAngleSetDestination * Math.PI) / 180.0f) );
                                         if (lBuoys.size() > 0) {
+                                            boolean lFound = false;
                                             for(WaterPathItem lItem : lBuoys) {
-                                                lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "Next buoy marked as destination."));
                                                 if (lColor == plugin.configRedBouyColor) { // red
-                                                    if (!lBuoy.red_links.contains(lItem.key)) lBuoy.red_links.add(lItem.key);
+                                                    if (!lBuoy.red_links.contains(lItem.key)) {
+                                                        lBuoy.red_links.add(lItem.key);
+                                                        lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "Next buoy marked as destination."));
+                                                        lFound = true;
+                                                        break;
+                                                    }
                                                 } else { // green
-                                                    if (!lBuoy.green_links.contains(lItem.key)) lBuoy.green_links.add(lItem.key);
+                                                    if (!lBuoy.green_links.contains(lItem.key)) {
+                                                        lBuoy.green_links.add(lItem.key);
+                                                        lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "Next buoy marked as destination."));
+                                                        lFound = true;
+                                                        break;
+                                                    }
                                                 }
+                                            }
+                                            if (lFound) {
                                                 plugin.updateDynMapBuoy();
-                                                break;
+                                            } else {
+                                                lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "No buoy found in this direction!"));
                                             }
                                         } else {
                                             lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "No buoy found in this direction!"));
