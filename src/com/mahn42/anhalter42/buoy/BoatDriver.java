@@ -55,12 +55,29 @@ public class BoatDriver implements Runnable {
                     Vector lPos = fBoat.getLocation().toVector();
                     Vector lRedVector = fDestination.red_position.getVector().subtract(lPos);
                     Vector lGreenVector = fDestination.green_position.getVector().subtract(lPos);
-                    if ((lRedVector.angle(fStartVector) < lGreenVector.angle(fStartVector) && !lRedEmpty) || lGreenEmpty) {
+                    int lRedSize = ((lRedVector.getBlockX() < 0 && fStartVector.getBlockX() < 0) ? 1 : 0)
+                            + ((lRedVector.getBlockZ() < 0 && fStartVector.getBlockZ() < 0) ? 1 : 0)
+                            + ((lRedVector.getBlockX() >= 0 && fStartVector.getBlockX() >= 0) ? 1 : 0)
+                            + ((lRedVector.getBlockZ() >= 0 && fStartVector.getBlockZ() >= 0) ? 1 : 0);
+                    int lGreenSize = ((lGreenVector.getBlockX() < 0 && fStartVector.getBlockX() < 0) ? 1 : 0)
+                            + ((lGreenVector.getBlockZ() < 0 && fStartVector.getBlockZ() < 0) ? 1 : 0)
+                            + ((lGreenVector.getBlockX() >= 0 && fStartVector.getBlockX() >= 0) ? 1 : 0)
+                            + ((lGreenVector.getBlockZ() >= 0 && fStartVector.getBlockZ() >= 0) ? 1 : 0);
+                    if (lRedVector.angle(fStartVector) < lGreenVector.angle(fStartVector) && !lRedEmpty && lRedSize >= 2) {
                         fSide = Side.Red;
                         sendPlayer("Let's travel the red way.");
-                    } else {
+                    } else if (lGreenVector.angle(fStartVector) < lRedVector.angle(fStartVector) && !lGreenEmpty && lGreenSize >= 2) {
                         fSide = Side.Green;
                         sendPlayer("Let's travel the green way.");
+                    } else if (!lRedEmpty) {
+                        fSide = Side.Red;
+                        sendPlayer("I think we should travel the red way.");
+                    } else if (!lGreenEmpty) {
+                        fSide = Side.Green;
+                        sendPlayer("I think we should travel the green way.");
+                    } else {
+                        fSide = Side.Red;
+                        sendPlayer("There is no way. Driving to the red buoy.");
                     }
                     fStart = false;
                 }
