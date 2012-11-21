@@ -4,6 +4,7 @@
  */
 package com.mahn42.anhalter42.buoy;
 
+import com.mahn42.framework.Framework;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import org.bukkit.Location;
@@ -58,11 +59,7 @@ public class PlayerListener implements Listener {
             lInHand = event.getItem().getType();
         }
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            if (event.hasItem() && (
-                       lInHand.equals(Material.STONE_SPADE)
-                    || lInHand.equals(Material.IRON_SPADE)
-                    || lInHand.equals(Material.DIAMOND_SPADE)
-                    || lInHand.equals(Material.WOOD_SPADE))) {
+            if (event.hasItem() && Framework.isSpade(lInHand)) {
                 Block lBlock = event.getClickedBlock();
                 if (lBlock != null) {
                     if (lBlock.getType().equals(Material.WOOL)) {
@@ -86,11 +83,11 @@ public class PlayerListener implements Listener {
                                 WaterPathItem lBuoy = lDB.getItemAt(lLoc);
                                 if (lBuoy != null) {
                                     if (lColor == plugin.configRedBouyColor) { // red
+                                        lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "Clearing red destinations!", lBuoy.red_links.size()));
                                         lBuoy.red_links.clear();
-                                        lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "Clearing red destinations!"));
                                     } else { // green
+                                        lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "Clearing green destinations!", lBuoy.green_links.size()));
                                         lBuoy.green_links.clear();
-                                        lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "Clearing green destinations!"));
                                     }
                                     plugin.updateDynMapBuoy();
                                 } else {

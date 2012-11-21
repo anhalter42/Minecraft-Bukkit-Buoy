@@ -47,6 +47,57 @@ public class BuoyFinder implements Runnable {
             plugin.updateDynMapBuoy();
             //player.sendMessage((lItem.swapGreenToRed ? "GR" : "") + " " + (lItem.swapRedToGreen ? "RG" : "")) ;
             player.sendMessage(BuoyMain.plugin.getText(player, "Buoy is already active."));
+            PlayerBuoyConnection aCon = BuoyMain.plugin.getBuoyConnection(player.getName());
+            if (aCon == null) {
+                aCon = new PlayerBuoyConnection();
+                aCon.player = player.getName();
+                aCon.firstKey = lItem.key;
+                aCon.firstColor = aColor;
+                BuoyMain.plugin.setBuoyConnection(aCon);
+                player.sendMessage(BuoyMain.plugin.getText(player, "This buoy is marked as startpoint. Go to the next buoy and activate again to connect."));
+            } else {
+                BuoyMain.plugin.removeBuoyConnection(player.getName());
+                WaterPathItem lFirst = lDB.getRecord(aCon.firstKey);
+                if (lFirst != null) {
+                    double lDistance = lFirst.mid_position.distance(lItem.mid_position);
+                    if (lDistance > plugin.configMaxBuoyDistance) {
+                        player.sendMessage(BuoyMain.plugin.getText(player, "Buoys are to far away (%dm).", plugin.configMaxBuoyDistance));
+                    } else {
+                        if (aColor == aCon.firstColor) {
+                            if (aColor == plugin.configGreenBouyColor) {
+                                if (!lFirst.green_links.contains(lItem.key)) {
+                                    lFirst.green_links.add(lItem.key);
+                                }
+                                if (!lItem.red_links.contains(lFirst.key)) {
+                                    lItem.red_links.add(lFirst.key);
+                                }
+                            } else {
+                                if (!lFirst.red_links.contains(lItem.key)) {
+                                    lFirst.red_links.add(lItem.key);
+                                }
+                                if (!lItem.green_links.contains(lFirst.key)) {
+                                    lItem.green_links.add(lFirst.key);
+                                }
+                            }
+                            player.sendMessage(BuoyMain.plugin.getText(player, "Buoys are now connected with red and green ways."));
+                        } else {
+                            lFirst.red_links.clear();
+                            lFirst.green_links.clear();
+                            lItem.red_links.clear();
+                            lItem.green_links.clear();
+                            if (aColor == plugin.configGreenBouyColor) {
+                                lFirst.green_links.add(lItem.key);
+                            } else {
+                                lFirst.red_links.add(lItem.key);
+                            }
+                            player.sendMessage(BuoyMain.plugin.getText(player, "Buoys are now connected cross connected."));
+                        }
+                    }
+                } else {
+                    player.sendMessage(BuoyMain.plugin.getText(player, "Starting buoy does not exists any more."));
+                }
+            }
+            
         } else {
             Block[] lBlocks = findNearestBuoy(lWorld, lLoc, plugin.configMaxBuoyDistance, null, aColor);
             if (lBlocks.length > 0) {

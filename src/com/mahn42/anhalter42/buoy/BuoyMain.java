@@ -67,6 +67,7 @@ public class BuoyMain extends JavaPlugin {
     protected WorldDBList<WaterPathDB> fWaterPathDBs;
     protected BoatAutomatic fBoatAutomatic;
     protected HashMap<Boat, BoatDriver> fBoatDrivers;
+    protected HashMap<String, PlayerBuoyConnection> fPlayerBuoyConnections = new HashMap<String, PlayerBuoyConnection>();
     
     protected Plugin fDynmap;
      /**
@@ -91,6 +92,18 @@ public class BuoyMain extends JavaPlugin {
             }
         }
     }    
+    
+    public PlayerBuoyConnection getBuoyConnection(String aPlayerName) {
+        return fPlayerBuoyConnections.get(aPlayerName);
+    }
+    
+    public void setBuoyConnection(PlayerBuoyConnection aConnection) {
+        fPlayerBuoyConnections.put(aConnection.player, aConnection);
+    }
+    
+    public void removeBuoyConnection(String aPlayerName) {
+        fPlayerBuoyConnections.remove(aPlayerName);
+    }
     
     @Override
     public void onEnable() {
