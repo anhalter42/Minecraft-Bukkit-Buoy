@@ -58,13 +58,13 @@ public class BuoyFinder implements Runnable {
             } else {
                 BuoyMain.plugin.removeBuoyConnection(player.getName());
                 if (aCon.firstKey.equals(lItem.key)) {
-                    player.sendMessage(BuoyMain.plugin.getText(player, "unmark this buoy as startpoint."));
+                    player.sendMessage(BuoyMain.plugin.getText(player, "Unmarking this buoy as startpoint."));
                 } else {
                     WaterPathItem lFirst = lDB.getRecord(aCon.firstKey);
                     if (lFirst != null) {
                         double lDistance = lFirst.mid_position.distance(lItem.mid_position);
-                        if (lDistance > plugin.configMaxBuoyDistance) {
-                            player.sendMessage(BuoyMain.plugin.getText(player, "Buoys are to far away (%dm).", plugin.configMaxBuoyDistance));
+                        if (lDistance > plugin.configMaxDistanceSetDestination) {
+                            player.sendMessage(BuoyMain.plugin.getText(player, "Buoys are to far away (%dm).", plugin.configMaxDistanceSetDestination));
                         } else {
                             if (aColor == aCon.firstColor) {
                                 if (aColor == plugin.configGreenBouyColor) {
@@ -93,7 +93,7 @@ public class BuoyFinder implements Runnable {
                                 } else {
                                     lFirst.red_links.add(lItem.key);
                                 }
-                                player.sendMessage(BuoyMain.plugin.getText(player, "Buoys are now connected cross connected."));
+                                player.sendMessage(BuoyMain.plugin.getText(player, "Buoys are now cross connected."));
                             }
                         }
                     } else {

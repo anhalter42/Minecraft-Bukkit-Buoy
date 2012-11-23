@@ -19,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+//import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.util.Vector;
 
@@ -34,6 +35,13 @@ public class PlayerListener implements Listener {
     public PlayerListener(BuoyMain aPlugin) {
         plugin = aPlugin;
     }
+    
+    /*
+    @EventHandler
+    public void playerMove(PlayerMoveEvent aEvent) {
+        
+    }
+    */
     
     @EventHandler
     public void playerVehicle(VehicleExitEvent aEvent) {
