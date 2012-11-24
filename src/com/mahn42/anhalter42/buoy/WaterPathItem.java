@@ -8,9 +8,6 @@ import com.mahn42.framework.BlockPosition;
 import com.mahn42.framework.DBRecordWorld;
 import java.util.ArrayList;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
 /**
@@ -27,8 +24,11 @@ public class WaterPathItem extends DBRecordWorld {
     public ArrayList<String> red_links;
     public ArrayList<String> green_links;
     public String player;
+    @Deprecated
     public boolean swapRedToGreen = false;
+    @Deprecated
     public boolean swapGreenToRed = false;
+    public long lastDriveTime = 0;
     
     @Override
     protected void init() {
@@ -86,10 +86,8 @@ public class WaterPathItem extends DBRecordWorld {
     @Override
     public String toString() {
         return red_position.toString() + "[" + new Integer(red_links.size()) + "]"
-                + (swapRedToGreen ? "RG" : "")
                 + "-"
-                + green_position.toString() + "[" + new Integer(green_links.size()) + "]"
-                + (swapGreenToRed ? "GR" : "");
+                + green_position.toString() + "[" + new Integer(green_links.size()) + "]";
     }
     
     @Override

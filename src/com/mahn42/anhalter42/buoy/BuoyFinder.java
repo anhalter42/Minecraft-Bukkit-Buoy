@@ -35,7 +35,8 @@ public class BuoyFinder implements Runnable {
         World lWorld = startBlock.getWorld();
         WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
         byte aColor;
-        if (startBlock.getData() == plugin.configRedBouyColor) {
+        byte aBlockColor = startBlock.getData();
+        if (aBlockColor == plugin.configRedBouyColor) {
             aColor = plugin.configGreenBouyColor;
         } else {
             aColor = plugin.configRedBouyColor;
@@ -52,7 +53,7 @@ public class BuoyFinder implements Runnable {
                 aCon = new PlayerBuoyConnection();
                 aCon.player = player.getName();
                 aCon.firstKey = lItem.key;
-                aCon.firstColor = aColor;
+                aCon.firstColor = aBlockColor;
                 BuoyMain.plugin.setBuoyConnection(aCon);
                 player.sendMessage(BuoyMain.plugin.getText(player, "This buoy is marked as startpoint. Go to the next buoy and activate again to connect."));
             } else {
@@ -66,8 +67,8 @@ public class BuoyFinder implements Runnable {
                         if (lDistance > plugin.configMaxDistanceSetDestination) {
                             player.sendMessage(BuoyMain.plugin.getText(player, "Buoys are to far away (%dm).", plugin.configMaxDistanceSetDestination));
                         } else {
-                            if (aColor == aCon.firstColor) {
-                                if (aColor == plugin.configGreenBouyColor) {
+                            if (aBlockColor == aCon.firstColor) {
+                                if (aBlockColor == plugin.configGreenBouyColor) {
                                     if (!lFirst.green_links.contains(lItem.key)) {
                                         lFirst.green_links.add(lItem.key);
                                     }
@@ -88,7 +89,7 @@ public class BuoyFinder implements Runnable {
                                 lFirst.green_links.clear();
                                 lItem.red_links.clear();
                                 lItem.green_links.clear();
-                                if (aColor == plugin.configGreenBouyColor) {
+                                if (aBlockColor == plugin.configGreenBouyColor) {
                                     lFirst.green_links.add(lItem.key);
                                 } else {
                                     lFirst.red_links.add(lItem.key);

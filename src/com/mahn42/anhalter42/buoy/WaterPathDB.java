@@ -5,6 +5,7 @@
 package com.mahn42.anhalter42.buoy;
 
 import com.mahn42.framework.BlockPosition;
+import com.mahn42.framework.BlockPositionWalkAround;
 import com.mahn42.framework.DBSetWorld;
 import com.mahn42.framework.WorldLineWalk;
 import java.io.File;
@@ -45,8 +46,25 @@ public class WaterPathDB extends DBSetWorld<WaterPathItem> {
         return null;
     }
             
+    public WaterPathItem getItemForStart(BlockPosition aPos) {
+        for (WaterPathItem lItem : this) {
+            if (aPos.isBetween(lItem.way_green_position, lItem.way_red_position)) {
+                for(BlockPosition lPos : new WorldLineWalk(lItem.way_green_position, lItem.way_red_position)) {
+                    if (lPos.equals(aPos)) {
+                        return lItem;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+            
     public WaterPathItem getItemAt(Location lLoc) {
         return getItemAt(lLoc.getBlockX(), lLoc.getBlockY(), lLoc.getBlockZ());
+    }
+
+    public WaterPathItem getItemAt(BlockPosition aPos) {
+        return getItemAt(aPos.x, aPos.y, aPos.z);
     }
 
     public boolean contains(int aX, int aY, int aZ) {

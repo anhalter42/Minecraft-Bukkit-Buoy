@@ -31,6 +31,7 @@ public class BoatDriver implements Runnable {
     protected WaterPathItem fLastItem = null;
     protected Vector fStartVector = null;
     protected boolean fStart;
+    protected boolean fUseSide = false;
     
     public BoatDriver(BuoyMain aPlugin, Boat aBoat, WaterPathItem aBuoy, Vector aBeatVector) {
         plugin = aPlugin;
@@ -38,6 +39,16 @@ public class BoatDriver implements Runnable {
         fDestination = aBuoy;
         fStartVector = aBeatVector;
         fStart = true;
+        fUseSide = false;
+    }
+    
+    public BoatDriver(BuoyMain aPlugin, Boat aBoat, WaterPathItem aBuoy, Side aSide) {
+        plugin = aPlugin;
+        fBoat = aBoat;
+        fDestination = aBuoy;
+        fSide = aSide;
+        fStart = true;
+        fUseSide = true;
     }
     
     protected boolean fInRun = false;
@@ -50,34 +61,42 @@ public class BoatDriver implements Runnable {
                 Location lBoatLoc = fBoat.getLocation();
                 World lWorld = fBoat.getWorld();
                 if (fStart) {
-                    boolean lRedEmpty = fDestination.red_links.isEmpty();
-                    boolean lGreenEmpty = fDestination.green_links.isEmpty();
-                    Vector lPos = fBoat.getLocation().toVector();
-                    Vector lRedVector = fDestination.red_position.getVector().subtract(lPos);
-                    Vector lGreenVector = fDestination.green_position.getVector().subtract(lPos);
-                    int lRedSize = ((lRedVector.getBlockX() < 0 && fStartVector.getBlockX() < 0) ? 1 : 0)
-                            + ((lRedVector.getBlockZ() < 0 && fStartVector.getBlockZ() < 0) ? 1 : 0)
-                            + ((lRedVector.getBlockX() >= 0 && fStartVector.getBlockX() >= 0) ? 1 : 0)
-                            + ((lRedVector.getBlockZ() >= 0 && fStartVector.getBlockZ() >= 0) ? 1 : 0);
-                    int lGreenSize = ((lGreenVector.getBlockX() < 0 && fStartVector.getBlockX() < 0) ? 1 : 0)
-                            + ((lGreenVector.getBlockZ() < 0 && fStartVector.getBlockZ() < 0) ? 1 : 0)
-                            + ((lGreenVector.getBlockX() >= 0 && fStartVector.getBlockX() >= 0) ? 1 : 0)
-                            + ((lGreenVector.getBlockZ() >= 0 && fStartVector.getBlockZ() >= 0) ? 1 : 0);
-                    if (lRedVector.angle(fStartVector) < lGreenVector.angle(fStartVector) && !lRedEmpty && lRedSize >= 2) {
-                        fSide = Side.Red;
-                        sendPlayer("Let's travel the red way.");
-                    } else if (lGreenVector.angle(fStartVector) < lRedVector.angle(fStartVector) && !lGreenEmpty && lGreenSize >= 2) {
-                        fSide = Side.Green;
-                        sendPlayer("Let's travel the green way.");
-                    } else if (!lRedEmpty) {
-                        fSide = Side.Red;
-                        sendPlayer("I think we should travel the red way.");
-                    } else if (!lGreenEmpty) {
-                        fSide = Side.Green;
-                        sendPlayer("I think we should travel the green way.");
+                    if (fUseSide) {
+                        if (fSide == Side.Red) {
+                            sendPlayer("Let's travel the red way.");
+                        } else {
+                            sendPlayer("Let's travel the green way.");
+                        }
                     } else {
-                        fSide = Side.Red;
-                        sendPlayer("There is no way. Driving to the red buoy.");
+                        boolean lRedEmpty = fDestination.red_links.isEmpty();
+                        boolean lGreenEmpty = fDestination.green_links.isEmpty();
+                        Vector lPos = fBoat.getLocation().toVector();
+                        Vector lRedVector = fDestination.red_position.getVector().subtract(lPos);
+                        Vector lGreenVector = fDestination.green_position.getVector().subtract(lPos);
+                        int lRedSize = ((lRedVector.getBlockX() < 0 && fStartVector.getBlockX() < 0) ? 1 : 0)
+                                + ((lRedVector.getBlockZ() < 0 && fStartVector.getBlockZ() < 0) ? 1 : 0)
+                                + ((lRedVector.getBlockX() >= 0 && fStartVector.getBlockX() >= 0) ? 1 : 0)
+                                + ((lRedVector.getBlockZ() >= 0 && fStartVector.getBlockZ() >= 0) ? 1 : 0);
+                        int lGreenSize = ((lGreenVector.getBlockX() < 0 && fStartVector.getBlockX() < 0) ? 1 : 0)
+                                + ((lGreenVector.getBlockZ() < 0 && fStartVector.getBlockZ() < 0) ? 1 : 0)
+                                + ((lGreenVector.getBlockX() >= 0 && fStartVector.getBlockX() >= 0) ? 1 : 0)
+                                + ((lGreenVector.getBlockZ() >= 0 && fStartVector.getBlockZ() >= 0) ? 1 : 0);
+                        if (lRedVector.angle(fStartVector) < lGreenVector.angle(fStartVector) && !lRedEmpty && lRedSize >= 2) {
+                            fSide = Side.Red;
+                            sendPlayer("Let's travel the red way.");
+                        } else if (lGreenVector.angle(fStartVector) < lRedVector.angle(fStartVector) && !lGreenEmpty && lGreenSize >= 2) {
+                            fSide = Side.Green;
+                            sendPlayer("Let's travel the green way.");
+                        } else if (!lRedEmpty) {
+                            fSide = Side.Red;
+                            sendPlayer("I think we should travel the red way.");
+                        } else if (!lGreenEmpty) {
+                            fSide = Side.Green;
+                            sendPlayer("I think we should travel the green way.");
+                        } else {
+                            fSide = Side.Red;
+                            sendPlayer("There is no way. Driving to the red buoy.");
+                        }
                     }
                     fStart = false;
                 }
@@ -146,6 +165,7 @@ public class BoatDriver implements Runnable {
     }
     
     protected void triggerLevers(WaterPathItem aItem) {
+        aItem.lastDriveTime = fBoat.getWorld().getTime();
         if (fSide == Side.Red) {
             triggerLevers(aItem.red_position.getBlockAt(fBoat.getWorld(), 0, 1, 0));
         } else {
@@ -186,8 +206,8 @@ public class BoatDriver implements Runnable {
         } else {
             WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
             if (fLastItem != null) {
-                if (   (fSide == Side.Red && fDestination.red_links.size() > 2)
-                    || (fSide == Side.Green && fDestination.green_links.size() > 2)) {
+                if (   (fSide == Side.Red && fDestination.red_links.size() >= 2)
+                    || (fSide == Side.Green && fDestination.green_links.size() >= 2)) {
                     if (lExecute) {
                         //sendPlayer("To many destinations.");
                         deactivate(); // to many destinations
@@ -217,14 +237,18 @@ public class BoatDriver implements Runnable {
                 if (fSide == Side.Red) {
                     WaterPathItem lNewItem = null;
                     double lMinAngle = Double.MAX_VALUE;
-                    for(String lKey : fDestination.red_links) {
-                        WaterPathItem lItem = lDB.getRecord(lKey);
-                        if (lItem != null) {
-                            Vector lVector = lItem.red_position.getVector().subtract(fDestination.red_position.getVector());
-                            double lAngle = lVector.angle(fStartVector);
-                            if (lAngle < lMinAngle) {
-                                lMinAngle = lAngle;
-                                lNewItem = lItem;
+                    if (fDestination.red_links.size() == 1 || fStartVector == null) {
+                        lNewItem = lDB.getRecord(fDestination.red_links.get(0));
+                    } else {
+                        for(String lKey : fDestination.red_links) {
+                            WaterPathItem lItem = lDB.getRecord(lKey);
+                            if (lItem != null) {
+                                Vector lVector = lItem.red_position.getVector().subtract(fDestination.red_position.getVector());
+                                double lAngle = lVector.angle(fStartVector);
+                                if (lAngle < lMinAngle) {
+                                    lMinAngle = lAngle;
+                                    lNewItem = lItem;
+                                }
                             }
                         }
                     }
@@ -232,14 +256,18 @@ public class BoatDriver implements Runnable {
                 } else {
                     WaterPathItem lNewItem = null;
                     double lMinAngle = Double.MAX_VALUE;
-                    for(String lKey : fDestination.green_links) {
-                        WaterPathItem lItem = lDB.getRecord(lKey);
-                        if (lItem != null) {
-                            Vector lVector = lItem.green_position.getVector().subtract(fDestination.green_position.getVector());
-                            double lAngle = lVector.angle(fStartVector);
-                            if (lAngle < lMinAngle) {
-                                lMinAngle = lAngle;
-                                lNewItem = lItem;
+                    if (fDestination.green_links.size() == 1 || fStartVector == null) {
+                        lNewItem = lDB.getRecord(fDestination.green_links.get(0));
+                    } else {
+                        for(String lKey : fDestination.green_links) {
+                            WaterPathItem lItem = lDB.getRecord(lKey);
+                            if (lItem != null) {
+                                Vector lVector = lItem.green_position.getVector().subtract(fDestination.green_position.getVector());
+                                double lAngle = lVector.angle(fStartVector);
+                                if (lAngle < lMinAngle) {
+                                    lMinAngle = lAngle;
+                                    lNewItem = lItem;
+                                }
                             }
                         }
                     }

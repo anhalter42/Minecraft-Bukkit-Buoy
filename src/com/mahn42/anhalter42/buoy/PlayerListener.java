@@ -5,7 +5,9 @@
 package com.mahn42.anhalter42.buoy;
 
 import com.mahn42.framework.Framework;
+import com.mahn42.framework.PlayerPositionChangedEvent;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -54,6 +56,36 @@ public class PlayerListener implements Listener {
                 lBoat.setVelocity(new Vector(0, 0, 0));
                 plugin.deactivateBoatMovement(lBoat);
                 lPlayer.sendMessage(BuoyMain.plugin.getText(lPlayer, "Travel stopped!"));
+            }
+        }
+    }
+    
+    @EventHandler
+    public void playerPositionChanged(PlayerPositionChangedEvent aEvent) {
+        Player lPlayer = aEvent.getPlayer();
+        if (lPlayer.isInsideVehicle() && lPlayer.getVehicle() instanceof Boat) {
+            Boat lBoat = (Boat)lPlayer.getVehicle();
+            WaterPathDB lDB = plugin.getWaterPathDB(lPlayer.getWorld().getName());
+            WaterPathItem lBuoy = lDB.getItemForStart(aEvent.getTo());
+            if (lBuoy != null) {
+                long lWorldTime = aEvent.getPlayer().getWorld().getTime(); 
+                long lTimeDiff = lWorldTime - lBuoy.lastDriveTime;
+                if (lTimeDiff > 10) {
+                    if (lBuoy.red_links.isEmpty() && lBuoy.green_links.isEmpty()) {
+                        // kein weg 
+                    } else if (!lBuoy.red_links.isEmpty() && lBuoy.green_links.isEmpty()) {
+                        // roter weg
+                        plugin.startBuoyDriver(lBoat, lBuoy, BoatDriver.Side.Red);
+                    } else if (lBuoy.red_links.isEmpty() && !lBuoy.green_links.isEmpty()) {
+                        // grüner weg
+                        plugin.startBuoyDriver(lBoat, lBuoy, BoatDriver.Side.Green);
+                    } else {
+                        // weg entspr. blickrichtung
+                        List<Block> lLastTwoTargetBlocks = lPlayer.getLastTwoTargetBlocks(null, 100);
+                        Vector lV = lLastTwoTargetBlocks.get(0).getLocation().toVector().subtract(lPlayer.getLocation().toVector());
+                        plugin.startBuoyDriver(lBoat, lBuoy, lV);
+                    }
+                }
             }
         }
     }
@@ -109,11 +141,7 @@ public class PlayerListener implements Listener {
                 }
             }
         } else if (event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
-            if (event.hasItem() && (
-                       lInHand.equals(Material.STONE_SPADE)
-                    || lInHand.equals(Material.IRON_SPADE)
-                    || lInHand.equals(Material.DIAMOND_SPADE)
-                    || lInHand.equals(Material.WOOD_SPADE))) {
+            if (event.hasItem() && Framework.isSpade(lInHand)) {
                 if (lPlayer.getVehicle() != null && lPlayer.getVehicle() instanceof Boat) {
                     //
                     // travel

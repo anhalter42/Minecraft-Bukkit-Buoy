@@ -4,6 +4,7 @@
  */
 package com.mahn42.anhalter42.buoy;
 
+import com.mahn42.anhalter42.buoy.BoatDriver.Side;
 import com.mahn42.framework.Framework;
 import com.mahn42.framework.WorldDBList;
 import java.util.HashMap;
@@ -226,11 +227,23 @@ public class BuoyMain extends JavaPlugin {
     }
     
     public void startBuoyDriver(Boat aBoat, WaterPathItem aItem, Vector aBeatVector) {
-        BoatDriver lDriver = new BoatDriver(this, aBoat, aItem, aBeatVector);
-        int lTaskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, lDriver, 1, configTicksBoatDriver);
-        lDriver.setTaskId(lTaskId);
-        //getLogger().info("boat activated. " + new Integer(lDriver.getTaskId()).toString());
-        fBoatDrivers.put(aBoat, lDriver);
+        if (!isBoatTraveling(aBoat)) {
+            BoatDriver lDriver = new BoatDriver(this, aBoat, aItem, aBeatVector);
+            int lTaskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, lDriver, 1, configTicksBoatDriver);
+            lDriver.setTaskId(lTaskId);
+            //getLogger().info("boat activated. " + new Integer(lDriver.getTaskId()).toString());
+            fBoatDrivers.put(aBoat, lDriver);
+        }
+    }
+
+    public void startBuoyDriver(Boat aBoat, WaterPathItem aItem, Side aSide) {
+        if (!isBoatTraveling(aBoat)) {
+            BoatDriver lDriver = new BoatDriver(this, aBoat, aItem, aSide);
+            int lTaskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, lDriver, 1, configTicksBoatDriver);
+            lDriver.setTaskId(lTaskId);
+            //getLogger().info("boat activated. " + new Integer(lDriver.getTaskId()).toString());
+            fBoatDrivers.put(aBoat, lDriver);
+        }
     }
 
     private void readBuoyConfig() {
