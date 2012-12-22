@@ -62,6 +62,8 @@ public class PlayerListener implements Listener {
     
     @EventHandler
     public void playerPositionChanged(PlayerPositionChangedEvent aEvent) {
+        return; // automatic driving disabled
+        /*
         Player lPlayer = aEvent.getPlayer();
         if (lPlayer.isInsideVehicle() && lPlayer.getVehicle() instanceof Boat) {
             Boat lBoat = (Boat)lPlayer.getVehicle();
@@ -88,6 +90,7 @@ public class PlayerListener implements Listener {
                 }
             }
         }
+        */
     }
     
     @EventHandler
