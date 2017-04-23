@@ -20,6 +20,7 @@ import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import org.dynmap.DynmapAPI;
 import org.dynmap.markers.CircleMarker;
@@ -229,8 +230,8 @@ public class BuoyMain extends JavaPlugin {
     public void startBuoyDriver(Boat aBoat, WaterPathItem aItem, Vector aBeatVector) {
         if (!isBoatTraveling(aBoat)) {
             BoatDriver lDriver = new BoatDriver(this, aBoat, aItem, aBeatVector);
-            int lTaskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, lDriver, 1, configTicksBoatDriver);
-            lDriver.setTaskId(lTaskId);
+            BukkitTask lTask = getServer().getScheduler().runTaskTimerAsynchronously(this, lDriver, 1, configTicksBoatDriver); // scheduleAsyncRepeatingTask(this, lDriver, 1, configTicksBoatDriver);
+            lDriver.setTaskId(lTask.getTaskId());
             //getLogger().info("boat activated. " + new Integer(lDriver.getTaskId()).toString());
             fBoatDrivers.put(aBoat, lDriver);
         }
@@ -239,8 +240,8 @@ public class BuoyMain extends JavaPlugin {
     public void startBuoyDriver(Boat aBoat, WaterPathItem aItem, Side aSide) {
         if (!isBoatTraveling(aBoat)) {
             BoatDriver lDriver = new BoatDriver(this, aBoat, aItem, aSide);
-            int lTaskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, lDriver, 1, configTicksBoatDriver);
-            lDriver.setTaskId(lTaskId);
+            BukkitTask lTask = getServer().getScheduler().runTaskTimerAsynchronously(this, lDriver, 1, configTicksBoatDriver);
+            lDriver.setTaskId(lTask.getTaskId());
             //getLogger().info("boat activated. " + new Integer(lDriver.getTaskId()).toString());
             fBoatDrivers.put(aBoat, lDriver);
         }

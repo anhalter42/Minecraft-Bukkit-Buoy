@@ -8,6 +8,7 @@ import com.mahn42.framework.Framework;
 import com.mahn42.framework.PlayerPositionChangedEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -152,7 +153,7 @@ public class PlayerListener implements Listener {
                     Boat lBoat = (Boat)lPlayer.getVehicle();
                     WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
                     Location lLocation = lPlayer.getLocation();
-                    Block lBlock = lPlayer.getTargetBlock(null, 20);
+                    Block lBlock = lPlayer.getTargetBlock((Set<Material>)null, 20);
                     if ((lBlock != null) && (lBlock.getY() > (lPlayer.getLocation().getBlockY() + plugin.configAirBeatY))) { // schlag in die luft
                         if (plugin.isBoatTraveling(lBoat)) {
                             plugin.deactivateBoatMovement(lBoat);
@@ -180,7 +181,7 @@ public class PlayerListener implements Listener {
                         if (lBlock.getType().equals(Material.WOOL)) {
                             int lColor = lBlock.getData();
                             if ((lColor == plugin.configRedBouyColor) || (lColor == plugin.configGreenBouyColor)) { // red or green
-                                Block lTargetBlock = lPlayer.getTargetBlock(null, 20);
+                                Block lTargetBlock = lPlayer.getTargetBlock((Set<Material>)null, 20);
                                 if ((lTargetBlock != null) && (lTargetBlock.getY() > (lPlayer.getLocation().getBlockY() + plugin.configAirBeatY))) { // schlag in die luft
                                     WaterPathDB lDB = plugin.getWaterPathDB(lWorld.getName());
                                     WaterPathItem lBuoy = lDB.getItemAt(lLoc);
