@@ -27,6 +27,7 @@ import org.dynmap.markers.CircleMarker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
 import org.dynmap.markers.PolyLineMarker;
+
 /**
  *
  * @author andre
@@ -50,7 +51,7 @@ public class BuoyMain extends JavaPlugin {
 		colors.put("green",13);
 		colors.put("red",14);
 		colors.put("black",15);
-                */
+     */
     public int configAirBeatY = 2;
     public int configMaxDistanceForTravel = 80;
     public int configMaxAngleForTravel = 45;
@@ -63,50 +64,52 @@ public class BuoyMain extends JavaPlugin {
     public byte configGreenBouyColor = 13;
     public int configTicksDBSave = 100;
     public long configLeverTicks = 20;
-    
+
     public static BuoyMain plugin;
-    
+
     protected WorldDBList<WaterPathDB> fWaterPathDBs;
     protected BoatAutomatic fBoatAutomatic;
     protected HashMap<Boat, BoatDriver> fBoatDrivers;
     protected HashMap<String, PlayerBuoyConnection> fPlayerBuoyConnections = new HashMap<String, PlayerBuoyConnection>();
-    
+
     protected Plugin fDynmap;
-     /**
+
+    /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
     }
 
     private class ServerListener implements Listener {
+
         private final BuoyMain plugin;
-        
+
         public ServerListener(BuoyMain aPlugin) {
             plugin = aPlugin;
         }
-        
-        @EventHandler(priority=EventPriority.MONITOR)
+
+        @EventHandler(priority = EventPriority.MONITOR)
         public void onPluginEnable(PluginEnableEvent event) {
             Plugin p = event.getPlugin();
             String name = p.getDescription().getName();
-            if(name.equals("dynmap")) {
+            if (name.equals("dynmap")) {
                 plugin.updateDynMapBuoy();
             }
         }
-    }    
-    
+    }
+
     public PlayerBuoyConnection getBuoyConnection(String aPlayerName) {
         return fPlayerBuoyConnections.get(aPlayerName);
     }
-    
+
     public void setBuoyConnection(PlayerBuoyConnection aConnection) {
         fPlayerBuoyConnections.put(aConnection.player, aConnection);
     }
-    
+
     public void removeBuoyConnection(String aPlayerName) {
         fPlayerBuoyConnections.remove(aPlayerName);
     }
-    
+
     @Override
     public void onEnable() {
         plugin = this;
@@ -119,7 +122,7 @@ public class BuoyMain extends JavaPlugin {
         getCommand("buoy_remove").setExecutor(new CommandRemoveBuoys(this));
         getCommand("buoy_debug").setExecutor(new CommandDebugBuoys(this));
         getCommand("buoy_dynmap").setExecutor(new CommandUpdateDynmap(this));
-        
+
         getServer().getPluginManager().registerEvents(new ServerListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(new BlockListener(this), this);
@@ -128,95 +131,103 @@ public class BuoyMain extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         /* Get dynmap */
         fDynmap = pm.getPlugin("dynmap");
-        if(fDynmap != null && fDynmap.isEnabled()) {
+        if (fDynmap != null && fDynmap.isEnabled()) {
             updateDynMapBuoy();
         }
     }
 
     public void updateDynMapBuoy() {
         if (fDynmap != null) {
-            DynmapAPI lDynmapAPI = (DynmapAPI)fDynmap; /* Get API */
-            MarkerAPI lMarkerAPI = lDynmapAPI.getMarkerAPI();
-            MarkerSet lMarkerSet = lMarkerAPI.getMarkerSet("buoy.markerset");
-            if (lMarkerSet != null) {
-                /*Set<Marker> lMarkers = lMarkerSet.getMarkers();
+            DynmapAPI lDynmapAPI = (DynmapAPI) fDynmap;
+            /* Get API */
+            try {
+                MarkerAPI lMarkerAPI = lDynmapAPI.getMarkerAPI();
+                MarkerSet lMarkerSet = lMarkerAPI.getMarkerSet("buoy.markerset");
+                if (lMarkerSet != null) {
+                    /*Set<Marker> lMarkers = lMarkerSet.getMarkers();
                 for(Marker lMarker : lMarkers) {
                     lMarker.deleteMarker();
                 }*/
-                lMarkerSet.deleteMarkerSet();
-                /*lMarkerSet = lMarkerAPI.createMarkerSet("buoy.markerset", "Buoys", null, false);
+                    lMarkerSet.deleteMarkerSet();
+                    /*lMarkerSet = lMarkerAPI.createMarkerSet("buoy.markerset", "Buoys", null, false);
                 if (lMarkerSet == null) {
                     return;
                 }*/
-            }// else {
+                }// else {
                 lMarkerSet = lMarkerAPI.createMarkerSet("buoy.markerset", "Buoys", null, false);
                 if (lMarkerSet == null) {
                     return;
                 }
-            //}
-            //getLogger().info("update dynmap markers buoy");
-            List<World> lWorlds = getServer().getWorlds();
-            for(World lWorld : lWorlds) {
-                WaterPathDB lDB = fWaterPathDBs.getDB(lWorld); // getWaterPathDB("world");
-                double[] lXs = new double[2];
-                double[] lYs = new double[2];
-                double[] lZs = new double[2];
-                for(WaterPathItem lItem : lDB) {
-                    if (lItem.red_links.isEmpty() && lItem.green_links.isEmpty()) {
-                        CircleMarker lMarker = lMarkerSet.createCircleMarker(lItem.key, "", true, lWorld.getName(), lItem.mid_position.x, lItem.mid_position.y, lItem.mid_position.z, 3, 3, false);
-                        if (lMarker != null)
-                            lMarker.setLineStyle(1, 0.75f, 0xFF8080);
-                    } else {
-                        lXs[0] = lItem.way_red_position.x;
-                        lYs[0] = lItem.way_red_position.y;
-                        lZs[0] = lItem.way_red_position.z;
-                        for(String lKey : lItem.red_links) {
-                            WaterPathItem lNextItem = lDB.getRecord(lKey);
-                            if (lNextItem != null) {
-                                lXs[1] = lNextItem.way_red_position.x;
-                                lYs[1] = lNextItem.way_red_position.y;
-                                lZs[1] = lNextItem.way_red_position.z;
-                                PolyLineMarker lLine = lMarkerSet.createPolyLineMarker(lItem.key+lKey, "", true, lWorld.getName(), lXs, lYs, lZs, false);
-                                if (lLine != null)
-                                    lLine.setLineStyle(1, 0.75f, 0xF04040);
+                //}
+                //getLogger().info("update dynmap markers buoy");
+                List<World> lWorlds = getServer().getWorlds();
+                for (World lWorld : lWorlds) {
+                    WaterPathDB lDB = fWaterPathDBs.getDB(lWorld); // getWaterPathDB("world");
+                    double[] lXs = new double[2];
+                    double[] lYs = new double[2];
+                    double[] lZs = new double[2];
+                    for (WaterPathItem lItem : lDB) {
+                        if (lItem.red_links.isEmpty() && lItem.green_links.isEmpty()) {
+                            CircleMarker lMarker = lMarkerSet.createCircleMarker(lItem.key, "", true, lWorld.getName(), lItem.mid_position.x, lItem.mid_position.y, lItem.mid_position.z, 3, 3, false);
+                            if (lMarker != null) {
+                                lMarker.setLineStyle(1, 0.75f, 0xFF8080);
                             }
-                        }
-                        lXs[0] = lItem.way_green_position.x;
-                        lYs[0] = lItem.way_green_position.y;
-                        lZs[0] = lItem.way_green_position.z;
-                        for(String lKey : lItem.green_links) {
-                            WaterPathItem lNextItem = lDB.getRecord(lKey);
-                            if (lNextItem != null) {
-                                lXs[1] = lNextItem.way_green_position.x;
-                                lYs[1] = lNextItem.way_green_position.y;
-                                lZs[1] = lNextItem.way_green_position.z;
-                                PolyLineMarker lLine = lMarkerSet.createPolyLineMarker(lItem.key+lKey, "", true, lWorld.getName(), lXs, lYs, lZs, false);
-                                if (lLine != null)
-                                    lLine.setLineStyle(1, 0.75f, 0x40F040);
+                        } else {
+                            lXs[0] = lItem.way_red_position.x;
+                            lYs[0] = lItem.way_red_position.y;
+                            lZs[0] = lItem.way_red_position.z;
+                            for (String lKey : lItem.red_links) {
+                                WaterPathItem lNextItem = lDB.getRecord(lKey);
+                                if (lNextItem != null) {
+                                    lXs[1] = lNextItem.way_red_position.x;
+                                    lYs[1] = lNextItem.way_red_position.y;
+                                    lZs[1] = lNextItem.way_red_position.z;
+                                    PolyLineMarker lLine = lMarkerSet.createPolyLineMarker(lItem.key + lKey, "", true, lWorld.getName(), lXs, lYs, lZs, false);
+                                    if (lLine != null) {
+                                        lLine.setLineStyle(1, 0.75f, 0xF04040);
+                                    }
+                                }
+                            }
+                            lXs[0] = lItem.way_green_position.x;
+                            lYs[0] = lItem.way_green_position.y;
+                            lZs[0] = lItem.way_green_position.z;
+                            for (String lKey : lItem.green_links) {
+                                WaterPathItem lNextItem = lDB.getRecord(lKey);
+                                if (lNextItem != null) {
+                                    lXs[1] = lNextItem.way_green_position.x;
+                                    lYs[1] = lNextItem.way_green_position.y;
+                                    lZs[1] = lNextItem.way_green_position.z;
+                                    PolyLineMarker lLine = lMarkerSet.createPolyLineMarker(lItem.key + lKey, "", true, lWorld.getName(), lXs, lYs, lZs, false);
+                                    if (lLine != null) {
+                                        lLine.setLineStyle(1, 0.75f, 0x40F040);
+                                    }
+                                }
                             }
                         }
                     }
                 }
+            } catch (Exception e) {
+
             }
         }
     }
-    
+
     @Override
-    public void onDisable() { 
+    public void onDisable() {
     }
-    
+
     public WaterPathDB getWaterPathDB(String aWorldName) {
         return fWaterPathDBs.getDB(aWorldName);
     }
-    
+
     public void setBoatVelocity(Boat aBoat, Vector aVelocity) {
         fBoatAutomatic.setMovement(aBoat, aVelocity);
     }
-    
+
     public boolean isBoatTraveling(Boat aBoat) {
         return fBoatDrivers.containsKey(aBoat);
     }
-    
+
     public void deactivateBoatMovement(Boat aBoat) {
         fBoatAutomatic.deactivateMovement(aBoat);
         if (fBoatDrivers.containsKey(aBoat)) {
@@ -226,7 +237,7 @@ public class BuoyMain extends JavaPlugin {
             fBoatDrivers.remove(aBoat);
         }
     }
-    
+
     public void startBuoyDriver(Boat aBoat, WaterPathItem aItem, Vector aBeatVector) {
         if (!isBoatTraveling(aBoat)) {
             BoatDriver lDriver = new BoatDriver(this, aBoat, aItem, aBeatVector);
@@ -263,15 +274,14 @@ public class BuoyMain extends JavaPlugin {
         configLeverTicks = lConfig.getLong("LeverTicks");
     }
 
-    
     public String getText(String aText, Object... aObjects) {
-        return getText((String)null, aText, aObjects);
+        return getText((String) null, aText, aObjects);
     }
-    
+
     public String getText(CommandSender aPlayer, String aText, Object... aObjects) {
         return getText(Framework.plugin.getPlayerLanguage(aPlayer.getName()), aText, aObjects);
     }
-    
+
     public String getText(String aLanguage, String aText, Object... aObjects) {
         return Framework.plugin.getText(this, aLanguage, aText, aObjects);
     }
